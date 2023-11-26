@@ -6,4 +6,5 @@ export default interface RowData {
   lastName: string;
   options: string[];
   phone: string;
+  number: number;
 }

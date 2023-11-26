@@ -1,14 +1,15 @@
 import React from "react";
 import "./App.scss";
+import { List } from "immutable";
 // import generateMockEntry from "./utils/createMocks";
 import mock1 from "./mocks/mock1.json";
 import { Table } from "./Components";
 import RowData from "./type/RowData";
-import { Column } from "./Components/Table/types";
+import { Column, RowUpdatePayload } from "./Components/Table/types";
 
-// generate mock data
+// // generate mock data
 // const mockDataArray = Array.from({ length: 3000 }, generateMockEntry);
-
+// console.log(mockDataArray);
 const columns: Column<RowData>[] = [
   {
     id: "email",
@@ -52,12 +53,34 @@ const columns: Column<RowData>[] = [
     type: "string",
     width: 200,
   },
+  {
+    id: "number",
+    ordinalNo: 5,
+    title: "Number",
+    type: "number",
+    width: 200,
+  },
 ];
 
 function App() {
+  const [data, setData] = React.useState(mock1 as RowData[]);
+  const onRowUpdate = (row: RowUpdatePayload<RowData>) => {
+    const updatedData = data.map((d) => {
+      if (d.id === row.row.id) {
+        return { ...d, [row.columnId]: row.value };
+      }
+      return d;
+    });
+    setData(updatedData);
+  };
   return (
     <div className="App">
-      <Table<RowData> rows={mock1} columns={columns} identifier={"id"} />
+      <Table<RowData>
+        rows={data}
+        columns={columns}
+        identifier={"id"}
+        onRowUpdate={onRowUpdate}
+      />
     </div>
   );
 }

@@ -14,5 +14,6 @@ export default function generateMockEntry() {
     lastName: faker.person.lastName(),
     email: faker.internet.email(),
     phone: faker.phone.number(),
+    number: faker.number.int(),
   };
 }
