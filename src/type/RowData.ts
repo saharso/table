@@ -7,4 +7,5 @@ export default interface RowData {
   options: string[];
   phone: string;
   number: number;
+  items: RowData[];
 }

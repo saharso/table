@@ -1,6 +1,7 @@
 import { Column, RowUpdatePayload } from "../types";
 import { v4 as uuId } from "uuid";
 import { useState } from "react";
+import { getCellWidth } from "../utils";
 
 function OptionsCell({ options }: { options: string[] }) {
   return (
@@ -74,9 +75,8 @@ export default function TableCell<Row = unknown>({
   onRowUpdate,
   className,
 }: TableCellProps<Row>) {
-  const width = column.width ? { width: column.width } : { flex: 1, width: 0 };
   return (
-    <div className={className} style={width}>
+    <div className={className} style={getCellWidth(column as Column)}>
       {column.type === "options" && (
         <OptionsCell options={row[column.id] as string[]} />
       )}
