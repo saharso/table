@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@faker-js/faker": "^8.3.1",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -10,10 +11,12 @@
     "@types/node": "^16.18.65",
     "@types/react": "^18.2.38",
     "@types/react-dom": "^18.2.17",
+    "faker": "^5.5.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5",
+    "uuid": "^9.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -41,6 +44,8 @@
     ]
   },
   "devDependencies": {
+    "@types/faker": "^6.6.9",
+    "@types/uuid": "^9.0.7",
     "node-sass": "^7.0.3",
     "prettier": "^3.1.0"
   }
