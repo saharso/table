@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.scss";
-import { List } from "immutable";
 // import generateMockEntry from "./utils/createMocks";
 import mock1 from "./mocks/mock1.json";
 import { Table } from "./Components";
@@ -8,7 +7,12 @@ import RowData from "./type/RowData";
 import { Column, RowUpdatePayload } from "./Components/Table/types";
 
 // // generate mock data
-// const mockDataArray = Array.from({ length: 3000 }, generateMockEntry);
+// const mockDataArray = Array.from({ length: 3000 }, () => {
+//   return {
+//     ...generateMockEntry(),
+//     items: Array.from({ length: 8 }, generateMockEntry),
+//   };
+// });
 // console.log(mockDataArray);
 const columns: Column<RowData>[] = [
   {
@@ -16,28 +20,28 @@ const columns: Column<RowData>[] = [
     ordinalNo: 20,
     title: "Email",
     type: "string",
-    width: 200,
+    width: 300,
   },
   {
     id: "firstName",
     ordinalNo: 2,
     title: "First Name",
     type: "string",
-    width: 200,
+    width: 100,
   },
   {
     id: "lastName",
     ordinalNo: 3,
     title: "Last Name",
     type: "string",
-    width: 200,
+    width: 100,
   },
   {
     id: "available",
     ordinalNo: 4,
     title: "Available",
     type: "boolean",
-    width: 200,
+    width: 90,
   },
   {
     id: "options",
@@ -62,17 +66,50 @@ const columns: Column<RowData>[] = [
   },
 ];
 
+const storageName = "storageEntries";
 function App() {
   const [data, setData] = React.useState(mock1 as RowData[]);
-  const onRowUpdate = (row: RowUpdatePayload<RowData>) => {
+  const [openRows, setOpenRows] = React.useState<Set<string>>(new Set());
+  const [storageEntries, setStorageEntries] = React.useState<
+    Record<string, RowData>
+  >({});
+  const onRowUpdate = (update: RowUpdatePayload<RowData>) => {
     const updatedData = data.map((d) => {
-      if (d.id === row.row.id) {
-        return { ...d, [row.columnId]: row.value };
+      if (d.id === update.row.id) {
+        setStorageEntries((prev) => {
+          const shallowClone = { ...prev };
+          shallowClone[d.id as string] = {
+            ...d,
+            [update.columnId]: update.value,
+          };
+          return shallowClone;
+        });
+        return { ...d, [update.columnId]: update.value };
       }
       return d;
     });
     setData(updatedData);
   };
+
+  useEffect(() => {
+    if (Object.keys(storageEntries).length !== 0) {
+      const previousEntries = JSON.parse(localStorage.getItem(storageName));
+      localStorage.setItem(
+        storageName,
+        JSON.stringify({ ...previousEntries, ...storageEntries }),
+      );
+    }
+  }, [storageEntries]);
+
+  useEffect(() => {
+    const storageEntries = JSON.parse(localStorage.getItem(storageName));
+    storageEntries &&
+      setData((prev) => {
+        return prev.map((d) => {
+          return storageEntries[d.id as string] ?? d;
+        });
+      });
+  }, []);
   return (
     <div className="App">
       <Table<RowData>
@@ -80,6 +117,19 @@ function App() {
         columns={columns}
         identifier={"id"}
         onRowUpdate={onRowUpdate}
+        openRows={openRows}
+        groupKey={"items"}
+        onRowToggle={(id: string) => {
+          setOpenRows((prev) => {
+            const newPrev = new Set(prev);
+            if (newPrev.has(id)) {
+              newPrev.delete(id);
+            } else {
+              newPrev.add(id);
+            }
+            return newPrev;
+          });
+        }}
       />
     </div>
   );
