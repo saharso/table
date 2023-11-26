@@ -8,12 +8,10 @@ export default function TableHead<Row = unknown>({
   columns,
 }: TableHeadProps<Row>) {
   return (
-    <thead>
-      <tr>
-        {columns.map((column) => (
-          <th key={column.id as string}>{column.title}</th>
-        ))}
-      </tr>
-    </thead>
+    <tr>
+      {columns.map((column) => (
+        <th key={column.id as string}>{column.title}</th>
+      ))}
+    </tr>
   );
 }

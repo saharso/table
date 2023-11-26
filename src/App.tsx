@@ -51,7 +51,7 @@ const columns: Column<RowData>[] = [
     ordinalNo: 5,
     title: "Phone",
     type: "string",
-    width: 200,
+    // width: 200,
   },
   {
     id: "number",

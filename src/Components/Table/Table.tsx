@@ -1,8 +1,7 @@
 import { Column, RowUpdatePayload } from "./types";
-import TableHead from "./Components/TableHead";
 import styles from "./Table.module.scss";
-import TableRow from "./Components/TableRow";
-
+import { Virtuoso } from "react-virtuoso";
+import TableCell from "./Components/TableCell";
 interface TableProps<Row = unknown> {
   rows: Row[];
   columns: Column<Row>[];
@@ -13,26 +12,36 @@ interface TableProps<Row = unknown> {
 export default function Table<Row = unknown>({
   rows,
   columns,
-  identifier,
   onRowUpdate,
 }: TableProps<Row>) {
   const sortedColumns = columns.sort((a, b) => a.ordinalNo - b.ordinalNo);
   return (
-    <table className={styles.Table}>
-      <TableHead<Row> columns={sortedColumns} />
-      <tbody>
-        {rows.map((row) => {
-          const index = rows.findIndex((r) => r === row);
-          return (
-            <TableRow
-              key={row[identifier] as string}
-              row={row}
-              columns={sortedColumns}
-              onRowUpdate={(update) => onRowUpdate({ ...update, index })}
-            ></TableRow>
-          );
-        })}
-      </tbody>
-    </table>
+    <Virtuoso
+      data={rows}
+      className={styles.TableWrapper}
+      useWindowScroll
+      itemContent={(index, row: Row) => {
+        return (
+          <>
+            <div className={styles.TableROw}>
+              <div className={styles.ToggleRowOpen}>
+                <button>+</button>
+              </div>
+              {sortedColumns.map((column) => {
+                return (
+                  <TableCell<Row>
+                    key={column.id as string}
+                    row={row}
+                    column={column}
+                    onRowUpdate={onRowUpdate}
+                  />
+                );
+              })}
+            </div>
+            <div>HELLO</div>
+          </>
+        );
+      }}
+    />
   );
 }

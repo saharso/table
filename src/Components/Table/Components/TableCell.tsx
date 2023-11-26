@@ -65,15 +65,18 @@ interface TableCellProps<Row = unknown> {
   row: Row;
   column: Column<Row>;
   onRowUpdate: ({ row, columnId, value }: RowUpdatePayload<Row>) => void;
+  className?: string;
 }
 
 export default function TableCell<Row = unknown>({
   row,
   column,
   onRowUpdate,
+  className,
 }: TableCellProps<Row>) {
+  const width = column.width ? { width: column.width } : { flex: 1, width: 0 };
   return (
-    <td>
+    <div className={className} style={width}>
       {column.type === "options" && (
         <OptionsCell options={row[column.id] as string[]} />
       )}
@@ -88,6 +91,6 @@ export default function TableCell<Row = unknown>({
       {column.type === "boolean" && (
         <BooleanCell data={row[column.id] as boolean} />
       )}
-    </td>
+    </div>
   );
 }
