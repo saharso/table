@@ -1,5 +1,5 @@
-export default interface Column {
-  id: string;
+export default interface Column<Row = unknown> {
+  id: keyof Row;
   ordinalNo: number;
   title: string;
   type: string;
