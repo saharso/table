@@ -66,7 +66,7 @@ export default function Table<Row = unknown>({
                 })}
               </div>
               {openRows?.has(row[identifier] as string) && (
-                <div>
+                <div className={styles.TableDrawer}>
                   {
                     <Table
                       columns={sortedColumns}
