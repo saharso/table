@@ -10,9 +10,6 @@ import RowData from "./type/RowData";
 import { RowUpdatePayload } from "./Components/Table/types";
 import { columns } from "./const";
 import { useLocalStorage, useSearch } from "./hooks";
-import mockDataArray from "./mocks/mockManager";
-
-console.log(mockDataArray);
 
 function getUpdatedEntry(
   rowData: RowData,
