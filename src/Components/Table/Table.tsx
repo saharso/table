@@ -3,7 +3,7 @@ import styles from "./Table.module.scss";
 import { Virtuoso } from "react-virtuoso";
 import TableCell from "./Components/TableCell";
 import TableHead from "./Components/TableHead";
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { IconButton } from "@mui/material";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -18,8 +18,6 @@ interface TableProps<Row = unknown> {
     value,
     index,
   }: RowUpdatePayload<Row>) => void;
-  openRows?: Set<string>;
-  onRowToggle?: (id: string) => void;
   removeHeader?: boolean;
   groupBy?: keyof Row;
 }
@@ -29,8 +27,6 @@ export default function Table<Row = unknown>({
   columns,
   onCellUpdate,
   identifier,
-  onRowToggle,
-  openRows,
   removeHeader,
   groupBy,
 }: TableProps<Row>) {
@@ -44,7 +40,9 @@ export default function Table<Row = unknown>({
     rows,
     columns: sortedColumns,
   });
-
+  const [collapsedRows, setCollapsedRows] = React.useState<Set<string>>(
+    new Set(),
+  );
   return (
     <div className={styles.Table}>
       {!removeHeader && <TableHead columns={columnsWithoutGroupBy} />}
@@ -52,14 +50,26 @@ export default function Table<Row = unknown>({
         data={data as never[]}
         useWindowScroll
         itemContent={(index, row: Row | GroupBy) => {
-          const rowOpen = true;
+          const rowOpen =
+            isGroupBy(row) && !collapsedRows.has(row.groupValue as string);
           return (
             <>
               <div className={styles.TableRow}>
                 <div className={styles.ToggleRowOpen}>
-                  {onCellUpdate && (
+                  {isGroupBy(row) && onCellUpdate && (
                     <IconButton
-                    // onClick={() => onRowToggle(row[identifier] as string)}
+                      onClick={() =>
+                        setCollapsedRows((prev) => {
+                          const newPrev = new Set(prev);
+                          const id = row.groupValue as string;
+                          if (newPrev.has(id)) {
+                            newPrev.delete(id);
+                          } else {
+                            newPrev.add(id);
+                          }
+                          return newPrev;
+                        })
+                      }
                     >
                       {rowOpen ? <ExpandMoreIcon /> : <ChevronRightIcon />}
                     </IconButton>
@@ -88,13 +98,14 @@ export default function Table<Row = unknown>({
                     );
                   })}
               </div>
-              {isGroupBy(row) && (
+              {rowOpen && (
                 <div className={styles.TableDrawer}>
                   {
                     <Table
                       columns={columnsWithoutGroupBy}
                       rows={row.items as Row[]}
                       removeHeader={true}
+                      onCellUpdate={onCellUpdate}
                     />
                   }
                 </div>

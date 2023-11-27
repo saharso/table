@@ -26,7 +26,6 @@ function getUpdatedEntry(
 
 function App() {
   const [data, setData] = React.useState(mock as RowData[]);
-  const [openRows, setOpenRows] = React.useState<Set<string>>(new Set());
   const { setStorageEntries } = useLocalStorage({
     setDataByLocalStorage: setData,
   });
@@ -55,19 +54,7 @@ function App() {
         columns={columns}
         identifier={"id"}
         onCellUpdate={onCellUpdate}
-        openRows={openRows}
         groupBy={"firstName"}
-        onRowToggle={(id: string) => {
-          setOpenRows((prev) => {
-            const newPrev = new Set(prev);
-            if (newPrev.has(id)) {
-              newPrev.delete(id);
-            } else {
-              newPrev.add(id);
-            }
-            return newPrev;
-          });
-        }}
       />
     </div>
   );
