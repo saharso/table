@@ -8,6 +8,7 @@ import { IconButton } from "@mui/material";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import useGroupBy from "./hooks/useGroupBy";
+import classNames from "classnames";
 interface TableProps<Row = unknown> {
   rows: Row[];
   columns: Column<Row>[];
@@ -54,7 +55,11 @@ export default function Table<Row = unknown>({
             isGroupBy(row) && !collapsedRows.has(row.groupValue as string);
           return (
             <>
-              <div className={styles.TableRow}>
+              <div
+                className={classNames(styles.TableRow, {
+                  [styles.GroupByHeader]: isGroupBy(row),
+                })}
+              >
                 <div className={styles.ToggleRowOpen}>
                   {isGroupBy(row) && onCellUpdate && (
                     <IconButton
@@ -76,7 +81,7 @@ export default function Table<Row = unknown>({
                   )}
                 </div>
                 {isGroupBy(row) && (
-                  <div className={styles.GroupBy}>
+                  <div>
                     <span>{groupedColumn.title}</span>
                     :&nbsp;
                     <span>{row.groupValue}</span>

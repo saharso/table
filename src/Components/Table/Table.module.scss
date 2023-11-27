@@ -5,8 +5,8 @@ $row-height: 50px;
   .TableHead {
     position: sticky;
     top: 0;
-    z-index: 1;
-    background-color: white;
+    z-index: 2;
+    background-color: #ffffff;
   }
 }
 
@@ -40,4 +40,10 @@ $row-height: 50px;
   background-color: #eef6ff;
   padding: 30px 4px 40px;
   box-shadow: -8px 192px 15px -196px rgba(0,0,30,0.15) inset;
+}
+.GroupByHeader {
+  position: sticky;
+  top: $row-height;
+  background-color: #ffffff;
+  z-index: 1;
 }
