@@ -3,7 +3,7 @@ import styles from "./Table.module.scss";
 import { Virtuoso } from "react-virtuoso";
 import TableCell from "./Components/TableCell";
 import TableHead from "./Components/TableHead";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { IconButton } from "@mui/material";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -34,13 +34,20 @@ export default function Table<Row = unknown>({
   removeHeader,
   groupBy,
 }: TableProps<Row>) {
-  const sortedColumns = columns.sort((a, b) => a.ordinalNo - b.ordinalNo);
+  const sortedColumns = useMemo(
+    () => columns.sort((a, b) => a.ordinalNo - b.ordinalNo),
+    [columns],
+  );
   const [editable, setEditable] = useState<CellEditPayload>();
-  const { data, isGrouped, isGroupBy } = useGroupBy({ groupBy, rows });
+  const { data, isGroupBy, groupedColumn, columnsWithoutGroupBy } = useGroupBy({
+    groupBy,
+    rows,
+    columns: sortedColumns,
+  });
 
   return (
     <div className={styles.Table}>
-      {!removeHeader && <TableHead columns={sortedColumns} />}
+      {!removeHeader && <TableHead columns={columnsWithoutGroupBy} />}
       <Virtuoso
         data={data as never[]}
         useWindowScroll
@@ -59,10 +66,15 @@ export default function Table<Row = unknown>({
                   )}
                 </div>
                 {isGroupBy(row) && (
-                  <div className={styles.GroupBy}>{row.groupValue}</div>
+                  <div className={styles.GroupBy}>
+                    <span>{groupedColumn.title}</span>
+                    :&nbsp;
+                    <span>{row.groupValue}</span>
+                  </div>
                 )}
+
                 {!isGroupBy(row) &&
-                  sortedColumns.map((column) => {
+                  columnsWithoutGroupBy.map((column) => {
                     return (
                       <TableCell<Row>
                         key={column.id as string}
@@ -80,7 +92,7 @@ export default function Table<Row = unknown>({
                 <div className={styles.TableDrawer}>
                   {
                     <Table
-                      columns={sortedColumns}
+                      columns={columnsWithoutGroupBy}
                       rows={row.items as Row[]}
                       removeHeader={true}
                     />

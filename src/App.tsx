@@ -37,7 +37,6 @@ function App() {
     data,
     keys: ["firstName", "lastName", "email"],
   });
-
   const onCellUpdate = (update: RowUpdatePayload<RowData>) => {
     const updatedData = data.map((rowData) => {
       if (rowData.id === update.row.id) {
