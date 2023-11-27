@@ -60,7 +60,7 @@ function App() {
         identifier={"id"}
         onCellUpdate={onCellUpdate}
         openRows={openRows}
-        groupKey={"items"}
+        groupBy={"firstName"}
         onRowToggle={(id: string) => {
           setOpenRows((prev) => {
             const newPrev = new Set(prev);

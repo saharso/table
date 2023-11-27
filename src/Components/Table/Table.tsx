@@ -11,7 +11,6 @@ interface TableProps<Row = unknown> {
   rows: Row[];
   columns: Column<Row>[];
   identifier?: keyof Row;
-  groupKey?: keyof Row;
   onCellUpdate?: ({
     row,
     columnId,
@@ -21,6 +20,7 @@ interface TableProps<Row = unknown> {
   openRows?: Set<string>;
   onRowToggle?: (id: string) => void;
   removeHeader?: boolean;
+  groupBy?: keyof Row;
 }
 
 export default function Table<Row = unknown>({
@@ -30,7 +30,6 @@ export default function Table<Row = unknown>({
   identifier,
   onRowToggle,
   openRows,
-  groupKey,
   removeHeader,
 }: TableProps<Row>) {
   const sortedColumns = columns.sort((a, b) => a.ordinalNo - b.ordinalNo);
@@ -70,17 +69,17 @@ export default function Table<Row = unknown>({
                   );
                 })}
               </div>
-              {rowOpen && (
-                <div className={styles.TableDrawer}>
-                  {
-                    <Table
-                      columns={sortedColumns}
-                      rows={row[groupKey] as Row[]}
-                      removeHeader={true}
-                    />
-                  }
-                </div>
-              )}
+              {/*{rowOpen && (*/}
+              {/*  <div className={styles.TableDrawer}>*/}
+              {/*    {*/}
+              {/*      <Table*/}
+              {/*        columns={sortedColumns}*/}
+              {/*        rows={row[groupKey] as Row[]}*/}
+              {/*        removeHeader={true}*/}
+              {/*      />*/}
+              {/*    }*/}
+              {/*  </div>*/}
+              {/*)}*/}
             </>
           );
         }}
