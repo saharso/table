@@ -4,6 +4,7 @@ import { Virtuoso } from "react-virtuoso";
 import { GroupByHeader, TableCell, TableHead } from "./Components";
 import React, { useMemo, useState } from "react";
 import useGroupBy from "./hooks/useGroupBy";
+import { v4 as uuId } from "uuid";
 
 interface TableProps<Row = unknown> {
   rows: Row[];
@@ -74,7 +75,7 @@ export default function Table<Row = unknown>({
                 <div className={styles.TableDrawer}>
                   {row.items.map((row, index) => {
                     return (
-                      <div className={styles.TableRow} key={index}>
+                      <div className={styles.TableRow} key={uuId()}>
                         {columnsWithoutGroupBy.map((column) => {
                           return (
                             <TableCell<Row>
