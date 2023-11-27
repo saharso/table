@@ -23,6 +23,35 @@ interface TableProps<Row = unknown> {
   groupBy?: keyof Row;
 }
 
+interface GroupByRowProps {
+  row: GroupBy;
+  rowOpen: boolean;
+  onCollapseToggle: (row: GroupBy) => void;
+  groupedColumn: Column;
+}
+function GroupByRow<Row = unknown>({
+  row,
+  rowOpen,
+  onCollapseToggle,
+  groupedColumn,
+}: GroupByRowProps) {
+  return (
+    <div className={classNames(styles.TableRow, {})}>
+      <div className={styles.ToggleRowOpen}>
+        <IconButton onClick={() => onCollapseToggle(row)}>
+          {rowOpen ? <ExpandMoreIcon /> : <ChevronRightIcon />}
+        </IconButton>
+      </div>
+
+      <div>
+        <span>{groupedColumn.title}</span>
+        :&nbsp;
+        <span>{row.groupValue}</span>
+      </div>
+    </div>
+  );
+}
+
 export default function Table<Row = unknown>({
   rows,
   columns,
@@ -44,75 +73,57 @@ export default function Table<Row = unknown>({
   const [collapsedRows, setCollapsedRows] = React.useState<Set<string>>(
     new Set(),
   );
+
+  const onToggleRowCollapse = (row: GroupBy) => {
+    setCollapsedRows((prev) => {
+      const newPrev = new Set(prev);
+      const id = row.groupValue as string;
+      if (newPrev.has(id)) {
+        newPrev.delete(id);
+      } else {
+        newPrev.add(id);
+      }
+      return newPrev;
+    });
+  };
   return (
     <div className={styles.Table}>
       {!removeHeader && <TableHead columns={columnsWithoutGroupBy} />}
       <Virtuoso
         data={data as never[]}
         useWindowScroll
-        itemContent={(index, row: Row | GroupBy) => {
+        itemContent={(index, row: GroupBy) => {
           const rowOpen =
             isGroupBy(row) && !collapsedRows.has(row.groupValue as string);
           return (
             <>
-              <div
-                className={classNames(styles.TableRow, {
-                  [styles.GroupByHeader]: isGroupBy(row),
-                })}
-              >
-                <div className={styles.ToggleRowOpen}>
-                  {isGroupBy(row) && onCellUpdate && (
-                    <IconButton
-                      onClick={() =>
-                        setCollapsedRows((prev) => {
-                          const newPrev = new Set(prev);
-                          const id = row.groupValue as string;
-                          if (newPrev.has(id)) {
-                            newPrev.delete(id);
-                          } else {
-                            newPrev.add(id);
-                          }
-                          return newPrev;
-                        })
-                      }
-                    >
-                      {rowOpen ? <ExpandMoreIcon /> : <ChevronRightIcon />}
-                    </IconButton>
-                  )}
-                </div>
-                {isGroupBy(row) && (
-                  <div>
-                    <span>{groupedColumn.title}</span>
-                    :&nbsp;
-                    <span>{row.groupValue}</span>
-                  </div>
-                )}
-
-                {!isGroupBy(row) &&
-                  columnsWithoutGroupBy.map((column) => {
-                    return (
-                      <TableCell<Row>
-                        key={column.id as string}
-                        row={row as Row}
-                        column={column}
-                        onCellUpdate={onCellUpdate}
-                        index={index}
-                        onEdit={setEditable}
-                        editable={editable}
-                      />
-                    );
-                  })}
-              </div>
+              <GroupByRow
+                row={row}
+                rowOpen={rowOpen}
+                onCollapseToggle={onToggleRowCollapse}
+                groupedColumn={groupedColumn as Column}
+              />
               {rowOpen && (
                 <div className={styles.TableDrawer}>
-                  {
-                    <Table
-                      columns={columnsWithoutGroupBy}
-                      rows={row.items as Row[]}
-                      removeHeader={true}
-                      onCellUpdate={onCellUpdate}
-                    />
-                  }
+                  {row.items.map((row, index) => {
+                    return (
+                      <div className={styles.TableRow} key={index}>
+                        {columnsWithoutGroupBy.map((column) => {
+                          return (
+                            <TableCell<Row>
+                              key={column.id as string}
+                              row={row as Row}
+                              column={column}
+                              onCellUpdate={onCellUpdate}
+                              index={index}
+                              onEdit={setEditable}
+                              editable={editable}
+                            />
+                          );
+                        })}
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </>
