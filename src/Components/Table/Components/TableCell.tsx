@@ -13,12 +13,14 @@ function OptionsCell({ options }: { options: string[] }) {
     </select>
   );
 }
-function EditableStringCell({
+function EditableDataCell({
   data,
   onSaveCell,
+  type = "string",
 }: {
   data: string;
   onSaveCell: (value: string) => void;
+  type?: "string" | "number";
 }) {
   const [editable, setEditable] = useState(false);
   const [value, setValue] = useState(data);
@@ -36,7 +38,7 @@ function EditableStringCell({
       {editable && (
         <div>
           <input
-            type="text"
+            type={type}
             defaultValue={data}
             onChange={(e) => {
               setValue(e.target.value);
@@ -81,7 +83,7 @@ export default function TableCell<Row = unknown>({
         <OptionsCell options={row[column.id] as string[]} />
       )}
       {column.type === "string" && (
-        <EditableStringCell
+        <EditableDataCell
           onSaveCell={(value) => {
             onRowUpdate({ row, columnId: column.id, value });
           }}
@@ -90,6 +92,15 @@ export default function TableCell<Row = unknown>({
       )}
       {column.type === "boolean" && (
         <BooleanCell data={row[column.id] as boolean} />
+      )}
+      {column.type === "number" && (
+        <EditableDataCell
+          onSaveCell={(value) => {
+            onRowUpdate({ row, columnId: column.id, value });
+          }}
+          data={row[column.id] as string}
+          type="number"
+        />
       )}
     </div>
   );
