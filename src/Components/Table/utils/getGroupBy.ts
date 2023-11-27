@@ -1,5 +1,10 @@
-export default function groupBy<Row = unknown>(data: Row[], field: keyof Row) {
-  const groupedData: Record<string, { items: Row[]; groupValue: string }> = {};
+import { GroupBy } from "../types";
+
+export default function getGroupBy<Row = unknown>(
+  data: Row[],
+  field: keyof Row,
+): GroupBy[] {
+  const groupedData: Record<string, GroupBy> = {};
 
   data.forEach((row) => {
     const groupValue = row[field] as string;
