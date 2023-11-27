@@ -1,2 +1,2 @@
 export { default as getCellWidth } from "./getCellWidth";
-export { default as groupBy } from "./getGroupBy";
+export { default as getGroupBy } from "./getGroupBy";
