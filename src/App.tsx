@@ -1,14 +1,15 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import "./App.scss";
 import mock1 from "./mocks/mock1.json";
-import { Table } from "./Components";
+import { Table, ToolBar } from "./Components";
 import RowData from "./type/RowData";
 import { RowUpdatePayload } from "./Components/Table/types";
 import { columns } from "./const";
+import { useLocalStorage, useSearch } from "./hooks";
 // import generateMockEntry from "./utils/createMocks";
 
 // // generate mock data
@@ -33,13 +34,17 @@ function getUpdatedEntry(
   return shallowClone;
 }
 
-const storageName = "storageEntries";
 function App() {
   const [data, setData] = React.useState(mock1 as RowData[]);
   const [openRows, setOpenRows] = React.useState<Set<string>>(new Set());
-  const [storageEntries, setStorageEntries] = React.useState<
-    Record<string, RowData>
-  >({});
+  const { setStorageEntries } = useLocalStorage({
+    setDataByLocalStorage: setData,
+  });
+  const { searchValue, setSearchValue, filteredData } = useSearch<RowData>({
+    data,
+    keys: ["firstName", "lastName", "email"],
+  });
+
   const onCellUpdate = (update: RowUpdatePayload<RowData>) => {
     const updatedData = data.map((rowData) => {
       if (rowData.id === update.row.id) {
@@ -53,30 +58,11 @@ function App() {
     setData(updatedData);
   };
 
-  useEffect(() => {
-    if (Object.keys(storageEntries).length !== 0) {
-      const previousEntries = JSON.parse(localStorage.getItem(storageName));
-      localStorage.setItem(
-        storageName,
-        JSON.stringify({ ...previousEntries, ...storageEntries }),
-      );
-    }
-  }, [storageEntries]);
-
-  useEffect(() => {
-    const storageEntries = JSON.parse(localStorage.getItem(storageName));
-    storageEntries &&
-      setData((prev) => {
-        return prev.map((d) => {
-          return storageEntries[d.id as string] ?? d;
-        });
-      });
-  }, []);
-
   return (
     <div className="App">
+      <ToolBar searchValue={searchValue} onSearch={setSearchValue} />
       <Table<RowData>
-        rows={data}
+        rows={filteredData}
         columns={columns}
         identifier={"id"}
         onCellUpdate={onCellUpdate}
