@@ -86,7 +86,7 @@ function App() {
   const [storageEntries, setStorageEntries] = React.useState<
     Record<string, RowData>
   >({});
-  const onRowUpdate = (update: RowUpdatePayload<RowData>) => {
+  const onCellUpdate = (update: RowUpdatePayload<RowData>) => {
     const updatedData = data.map((rowData) => {
       if (rowData.id === update.row.id) {
         setStorageEntries((prev) => {
@@ -124,7 +124,7 @@ function App() {
         rows={data}
         columns={columns}
         identifier={"id"}
-        onRowUpdate={onRowUpdate}
+        onCellUpdate={onCellUpdate}
         openRows={openRows}
         groupKey={"items"}
         onRowToggle={(id: string) => {

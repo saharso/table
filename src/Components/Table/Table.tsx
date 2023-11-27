@@ -8,7 +8,7 @@ interface TableProps<Row = unknown> {
   columns: Column<Row>[];
   identifier?: keyof Row;
   groupKey?: keyof Row;
-  onRowUpdate?: ({
+  onCellUpdate?: ({
     row,
     columnId,
     value,
@@ -22,7 +22,7 @@ interface TableProps<Row = unknown> {
 export default function Table<Row = unknown>({
   rows,
   columns,
-  onRowUpdate,
+  onCellUpdate,
   identifier,
   onRowToggle,
   openRows,
@@ -41,7 +41,7 @@ export default function Table<Row = unknown>({
             <>
               <div className={styles.TableRow}>
                 <div className={styles.ToggleRowOpen}>
-                  {onRowUpdate && (
+                  {onCellUpdate && (
                     <button
                       onClick={() => onRowToggle(row[identifier] as string)}
                     >
@@ -55,7 +55,7 @@ export default function Table<Row = unknown>({
                       key={column.id as string}
                       row={row}
                       column={column}
-                      onRowUpdate={onRowUpdate}
+                      onCellUpdate={onCellUpdate}
                     />
                   );
                 })}

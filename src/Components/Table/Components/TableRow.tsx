@@ -5,13 +5,13 @@ import { v4 as uuId } from "uuid";
 interface TableRowProps<Row = unknown> {
   row: Row;
   columns: Column<Row>[];
-  onRowUpdate: ({ row, columnId, value }: RowUpdatePayload<Row>) => void;
+  onCellUpdate: ({ row, columnId, value }: RowUpdatePayload<Row>) => void;
 }
 
 export default function TableRow<Row = unknown>({
   row,
   columns,
-  onRowUpdate,
+  onCellUpdate,
 }: TableRowProps<Row>) {
   return (
     <tr>
@@ -20,7 +20,7 @@ export default function TableRow<Row = unknown>({
           key={uuId()}
           column={column}
           row={row}
-          onRowUpdate={onRowUpdate}
+          onCellUpdate={onCellUpdate}
         />
       ))}
     </tr>

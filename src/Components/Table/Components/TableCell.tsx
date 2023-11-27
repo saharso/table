@@ -67,14 +67,14 @@ function BooleanCell({ data }: { data: boolean }) {
 interface TableCellProps<Row = unknown> {
   row: Row;
   column: Column<Row>;
-  onRowUpdate: ({ row, columnId, value }: RowUpdatePayload<Row>) => void;
+  onCellUpdate: ({ row, columnId, value }: RowUpdatePayload<Row>) => void;
   className?: string;
 }
 
 export default function TableCell<Row = unknown>({
   row,
   column,
-  onRowUpdate,
+  onCellUpdate,
   className,
 }: TableCellProps<Row>) {
   return (
@@ -85,7 +85,7 @@ export default function TableCell<Row = unknown>({
       {column.type === "string" && (
         <EditableDataCell
           onSaveCell={(value) => {
-            onRowUpdate({ row, columnId: column.id, value });
+            onCellUpdate({ row, columnId: column.id, value });
           }}
           data={row[column.id] as string}
         />
@@ -96,7 +96,7 @@ export default function TableCell<Row = unknown>({
       {column.type === "number" && (
         <EditableDataCell
           onSaveCell={(value) => {
-            onRowUpdate({ row, columnId: column.id, value });
+            onCellUpdate({ row, columnId: column.id, value });
           }}
           data={row[column.id] as string}
           type="number"
