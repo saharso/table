@@ -1,14 +1,10 @@
 import { CellEditPayload, Column, GroupBy, RowUpdatePayload } from "./types";
 import styles from "./Table.module.scss";
 import { Virtuoso } from "react-virtuoso";
-import TableCell from "./Components/TableCell";
-import TableHead from "./Components/TableHead";
+import { GroupByHeader, TableCell, TableHead } from "./Components";
 import React, { useMemo, useState } from "react";
-import { IconButton } from "@mui/material";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import useGroupBy from "./hooks/useGroupBy";
-import classNames from "classnames";
+
 interface TableProps<Row = unknown> {
   rows: Row[];
   columns: Column<Row>[];
@@ -21,35 +17,6 @@ interface TableProps<Row = unknown> {
   }: RowUpdatePayload<Row>) => void;
   removeHeader?: boolean;
   groupBy?: keyof Row;
-}
-
-interface GroupByRowProps {
-  row: GroupBy;
-  rowOpen: boolean;
-  onCollapseToggle: (row: GroupBy) => void;
-  groupedColumn: Column;
-}
-function GroupByRow<Row = unknown>({
-  row,
-  rowOpen,
-  onCollapseToggle,
-  groupedColumn,
-}: GroupByRowProps) {
-  return (
-    <div className={classNames(styles.TableRow, {})}>
-      <div className={styles.ToggleRowOpen}>
-        <IconButton onClick={() => onCollapseToggle(row)}>
-          {rowOpen ? <ExpandMoreIcon /> : <ChevronRightIcon />}
-        </IconButton>
-      </div>
-
-      <div>
-        <span>{groupedColumn.title}</span>
-        :&nbsp;
-        <span>{row.groupValue}</span>
-      </div>
-    </div>
-  );
 }
 
 export default function Table<Row = unknown>({
@@ -97,7 +64,7 @@ export default function Table<Row = unknown>({
             isGroupBy(row) && !collapsedRows.has(row.groupValue as string);
           return (
             <>
-              <GroupByRow
+              <GroupByHeader
                 row={row}
                 rowOpen={rowOpen}
                 onCollapseToggle={onToggleRowCollapse}
