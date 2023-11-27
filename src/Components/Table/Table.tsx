@@ -2,7 +2,7 @@ import { CellEditPayload, Column, GroupBy, RowUpdatePayload } from "./types";
 import styles from "./Table.module.scss";
 import { Virtuoso } from "react-virtuoso";
 import { GroupByHeader, TableCell, TableHead } from "./Components";
-import React, { useMemo, useState } from "react";
+import React, { FC, useMemo, useState } from "react";
 import useGroupBy from "./hooks/useGroupBy";
 import { v4 as uuId } from "uuid";
 
@@ -19,6 +19,43 @@ interface TableProps<Row = unknown> {
   removeHeader?: boolean;
   groupBy?: keyof Row;
 }
+
+interface TableRowProps<Row = unknown> {
+  columns: Column<Row>[];
+  row: Row;
+  onCellUpdate?: ({ row, columnId, value, index }: RowUpdatePayload) => void;
+  index?: number;
+  setEditable: React.Dispatch<CellEditPayload>;
+  editable: CellEditPayload;
+}
+const TableRow = React.memo(
+  ({
+    columns,
+    row,
+    index,
+    onCellUpdate,
+    setEditable,
+    editable,
+  }: TableRowProps) => {
+    return (
+      <div className={styles.TableRow}>
+        {columns.map((column) => {
+          return (
+            <TableCell
+              key={column.id as string}
+              row={row}
+              column={column}
+              onCellUpdate={onCellUpdate}
+              index={index}
+              onEdit={setEditable}
+              editable={editable}
+            />
+          );
+        })}
+      </div>
+    );
+  },
+);
 
 export default function Table<Row = unknown>({
   rows,
@@ -75,21 +112,15 @@ export default function Table<Row = unknown>({
                 <div className={styles.TableDrawer}>
                   {row.items.map((row, index) => {
                     return (
-                      <div className={styles.TableRow} key={uuId()}>
-                        {columnsWithoutGroupBy.map((column) => {
-                          return (
-                            <TableCell<Row>
-                              key={column.id as string}
-                              row={row as Row}
-                              column={column}
-                              onCellUpdate={onCellUpdate}
-                              index={index}
-                              onEdit={setEditable}
-                              editable={editable}
-                            />
-                          );
-                        })}
-                      </div>
+                      <TableRow
+                        key={uuId()}
+                        columns={columnsWithoutGroupBy as Column[]}
+                        row={row}
+                        index={index}
+                        onCellUpdate={onCellUpdate as any}
+                        setEditable={setEditable}
+                        editable={editable}
+                      />
                     );
                   })}
                 </div>

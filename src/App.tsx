@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
@@ -33,18 +33,21 @@ function App() {
     data,
     keys: ["firstName", "lastName", "email"],
   });
-  const onCellUpdate = (update: RowUpdatePayload<RowData>) => {
-    const updatedData = data.map((rowData) => {
-      if (rowData.id === update.row.id) {
-        setStorageEntries((prev) => {
-          return getUpdatedEntry(rowData, prev, update);
-        });
-        return { ...rowData, [update.columnId]: update.value };
-      }
-      return rowData;
-    });
-    setData(updatedData);
-  };
+  const onCellUpdate = useCallback(
+    (update: RowUpdatePayload<RowData>) => {
+      const updatedData = data.map((rowData) => {
+        if (rowData.id === update.row.id) {
+          setStorageEntries((prev) => {
+            return getUpdatedEntry(rowData, prev, update);
+          });
+          return { ...rowData, [update.columnId]: update.value };
+        }
+        return rowData;
+      });
+      setData(updatedData);
+    },
+    [data],
+  );
 
   return (
     <div className="App">

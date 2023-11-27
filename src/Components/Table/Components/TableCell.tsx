@@ -157,7 +157,7 @@ export default function TableCell<Row = unknown>({
   editable,
 }: TableCellProps<Row>) {
   const onUpdate = (value: string | boolean) => {
-    onCellUpdate({ row, columnId: column.id, value });
+    onCellUpdate({ row, columnId: column.id as string, value });
   };
   const onCellEdit = (editMode: boolean) => {
     if (editMode) {
