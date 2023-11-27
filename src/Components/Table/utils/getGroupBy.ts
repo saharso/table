@@ -9,7 +9,7 @@ export default function getGroupBy<Row = unknown>(
   data.forEach((row) => {
     const groupValue = row[field] as string;
     if (!groupedData[groupValue]) {
-      groupedData[groupValue] = { groupValue, items: [] };
+      groupedData[groupValue] = { groupValue, items: [row] };
     } else {
       const { [field]: _, ...rest } = row;
       groupedData[groupValue].items.push(rest);
