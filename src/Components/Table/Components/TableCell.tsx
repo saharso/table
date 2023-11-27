@@ -1,7 +1,13 @@
-import { Column, OptionsColumn, RowUpdatePayload } from "../types";
+import {
+  CellEditPayload,
+  Column,
+  OptionsColumn,
+  RowUpdatePayload,
+} from "../types";
 import { v4 as uuId } from "uuid";
 import { useState } from "react";
 import { getCellWidth } from "../utils";
+import styles from "../Table.module.scss";
 
 function SelectCell({
   options,
@@ -30,25 +36,34 @@ function EditableDataCell({
   data,
   onSaveCell,
   type = "string",
+  onEdit,
+  editable,
+  cellId,
 }: {
   data: string;
   onSaveCell: (value: string) => void;
   type?: "string" | "number";
+  onEdit: (editMode: boolean) => void;
+  editable: CellEditPayload;
+  cellId: CellEditPayload;
 }) {
-  const [editable, setEditable] = useState(false);
   const [value, setValue] = useState(data);
+  const isEditable =
+    editable &&
+    Object.values(editable).join("") === Object.values(cellId).join("");
 
   return (
     <div data-test={"editable-string-cell"}>
-      <button
-        onClick={(prev) => {
-          setEditable((prev) => !prev);
-        }}
-      >
-        Edit
-      </button>
-      {!editable && <div>{data}</div>}
-      {editable && (
+      {!isEditable && (
+        <div
+          onClick={() => {
+            onEdit(true);
+          }}
+        >
+          {data}
+        </div>
+      )}
+      {isEditable && (
         <div>
           <input
             type={type}
@@ -59,8 +74,15 @@ function EditableDataCell({
           />
           <button
             onClick={() => {
+              onEdit(false);
+            }}
+          >
+            cancel
+          </button>
+          <button
+            onClick={() => {
               onSaveCell(value);
-              setEditable(false);
+              onEdit(false);
             }}
           >
             Save
@@ -91,20 +113,31 @@ interface TableCellProps<Row = unknown> {
   row: Row;
   column: Column<Row>;
   onCellUpdate: ({ row, columnId, value }: RowUpdatePayload<Row>) => void;
-  className?: string;
+  index?: number;
+  onEdit: ({ columnId, index }: CellEditPayload) => void;
+  editable: CellEditPayload;
 }
 
 export default function TableCell<Row = unknown>({
   row,
   column,
   onCellUpdate,
-  className,
+  index,
+  onEdit,
+  editable,
 }: TableCellProps<Row>) {
   const onUpdate = (value: string | boolean) => {
     onCellUpdate({ row, columnId: column.id, value });
   };
+  const onCellEdit = (editMode: boolean) => {
+    if (editMode) {
+      onEdit({ columnId: column.id as string, index: index });
+    } else {
+      onEdit(null);
+    }
+  };
   return (
-    <div className={className} style={getCellWidth(column as Column)}>
+    <div className={styles.TableCell} style={getCellWidth(column as Column)}>
       {column.type === "options" && (
         <SelectCell
           data={row[column.id] as string}
@@ -116,6 +149,9 @@ export default function TableCell<Row = unknown>({
         <EditableDataCell
           onSaveCell={onUpdate}
           data={row[column.id] as string}
+          onEdit={onCellEdit}
+          editable={editable}
+          cellId={{ columnId: column.id as string, index: index }}
         />
       )}
       {column.type === "boolean" && (
@@ -126,6 +162,9 @@ export default function TableCell<Row = unknown>({
           onSaveCell={onUpdate}
           data={row[column.id] as string}
           type="number"
+          onEdit={onCellEdit}
+          editable={editable}
+          cellId={{ columnId: column.id as string, index: index }}
         />
       )}
     </div>

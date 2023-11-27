@@ -1,8 +1,9 @@
-import { Column, RowUpdatePayload } from "./types";
+import { CellEditPayload, Column, RowUpdatePayload } from "./types";
 import styles from "./Table.module.scss";
 import { Virtuoso } from "react-virtuoso";
 import TableCell from "./Components/TableCell";
 import TableHead from "./Components/TableHead";
+import { useState } from "react";
 interface TableProps<Row = unknown> {
   rows: Row[];
   columns: Column<Row>[];
@@ -30,6 +31,7 @@ export default function Table<Row = unknown>({
   removeHeader,
 }: TableProps<Row>) {
   const sortedColumns = columns.sort((a, b) => a.ordinalNo - b.ordinalNo);
+  const [editable, setEditable] = useState<CellEditPayload>();
   return (
     <div className={styles.Table}>
       {!removeHeader && <TableHead columns={sortedColumns} />}
@@ -56,6 +58,9 @@ export default function Table<Row = unknown>({
                       row={row}
                       column={column}
                       onCellUpdate={onCellUpdate}
+                      index={index}
+                      onEdit={setEditable}
+                      editable={editable}
                     />
                   );
                 })}

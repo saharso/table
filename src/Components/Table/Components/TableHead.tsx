@@ -14,7 +14,11 @@ export default function TableHead<Row = unknown>({
     <div className={classNames(styles.TableRow, styles.TableHead)}>
       <div className={styles.ToggleRowOpen} />
       {columns.map((column) => (
-        <div style={getCellWidth(column as Column)} key={column.id as string}>
+        <div
+          className={styles.TableCell}
+          style={getCellWidth(column as Column)}
+          key={column.id as string}
+        >
           {column.title}
         </div>
       ))}
