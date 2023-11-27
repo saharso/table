@@ -92,37 +92,29 @@ export default function TableCell<Row = unknown>({
   onCellUpdate,
   className,
 }: TableCellProps<Row>) {
+  const onUpdate = (value: string | boolean) => {
+    onCellUpdate({ row, columnId: column.id, value });
+  };
   return (
     <div className={className} style={getCellWidth(column as Column)}>
       {column.type === "options" && (
         <OptionsCell
           options={row[column.id] as string[]}
-          onSaveCell={(value) => {
-            onCellUpdate({ row, columnId: column.id, value });
-          }}
+          onSaveCell={onUpdate}
         />
       )}
       {column.type === "string" && (
         <EditableDataCell
-          onSaveCell={(value) => {
-            onCellUpdate({ row, columnId: column.id, value });
-          }}
+          onSaveCell={onUpdate}
           data={row[column.id] as string}
         />
       )}
       {column.type === "boolean" && (
-        <BooleanCell
-          data={row[column.id] as boolean}
-          onSaveCell={(value) => {
-            onCellUpdate({ row, columnId: column.id, value });
-          }}
-        />
+        <BooleanCell data={row[column.id] as boolean} onSaveCell={onUpdate} />
       )}
       {column.type === "number" && (
         <EditableDataCell
-          onSaveCell={(value) => {
-            onCellUpdate({ row, columnId: column.id, value });
-          }}
+          onSaveCell={onUpdate}
           data={row[column.id] as string}
           type="number"
         />
