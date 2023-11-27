@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { ForwardedRef, useEffect } from "react";
 import "./App.scss";
 // import generateMockEntry from "./utils/createMocks";
 import mock1 from "./mocks/mock1.json";
@@ -66,6 +66,19 @@ const columns: Column<RowData>[] = [
   },
 ];
 
+function getUpdatedEntry(
+  rowData: RowData,
+  prev: Record<string, RowData>,
+  update: RowUpdatePayload<RowData>,
+) {
+  const shallowClone = { ...prev };
+  shallowClone[rowData.id as string] = {
+    ...rowData,
+    [update.columnId]: update.value,
+  };
+  return shallowClone;
+}
+
 const storageName = "storageEntries";
 function App() {
   const [data, setData] = React.useState(mock1 as RowData[]);
@@ -74,19 +87,14 @@ function App() {
     Record<string, RowData>
   >({});
   const onRowUpdate = (update: RowUpdatePayload<RowData>) => {
-    const updatedData = data.map((d) => {
-      if (d.id === update.row.id) {
+    const updatedData = data.map((rowData) => {
+      if (rowData.id === update.row.id) {
         setStorageEntries((prev) => {
-          const shallowClone = { ...prev };
-          shallowClone[d.id as string] = {
-            ...d,
-            [update.columnId]: update.value,
-          };
-          return shallowClone;
+          return getUpdatedEntry(rowData, prev, update);
         });
-        return { ...d, [update.columnId]: update.value };
+        return { ...rowData, [update.columnId]: update.value };
       }
-      return d;
+      return rowData;
     });
     setData(updatedData);
   };

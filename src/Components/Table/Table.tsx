@@ -16,6 +16,7 @@ interface TableProps<Row = unknown> {
   }: RowUpdatePayload<Row>) => void;
   openRows?: Set<string>;
   onRowToggle?: (id: string) => void;
+  removeHeader?: boolean;
 }
 
 export default function Table<Row = unknown>({
@@ -26,11 +27,12 @@ export default function Table<Row = unknown>({
   onRowToggle,
   openRows,
   groupKey,
+  removeHeader,
 }: TableProps<Row>) {
   const sortedColumns = columns.sort((a, b) => a.ordinalNo - b.ordinalNo);
   return (
     <div className={styles.Table}>
-      <TableHead columns={sortedColumns} />
+      {!removeHeader && <TableHead columns={sortedColumns} />}
       <Virtuoso
         data={rows}
         useWindowScroll
@@ -64,6 +66,7 @@ export default function Table<Row = unknown>({
                     <Table
                       columns={sortedColumns}
                       rows={row[groupKey] as Row[]}
+                      removeHeader={true}
                     />
                   }
                 </div>
