@@ -4,22 +4,15 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import "./App.scss";
-import mock1 from "./mocks/mock1.json";
+import mock from "./mocks/mock.json";
 import { Table, ToolBar } from "./Components";
 import RowData from "./type/RowData";
 import { RowUpdatePayload } from "./Components/Table/types";
 import { columns } from "./const";
 import { useLocalStorage, useSearch } from "./hooks";
-// import generateMockEntry from "./utils/createMocks";
+import mockDataArray from "./mocks/mockManager";
 
-// // generate mock data
-// const mockDataArray = Array.from({ length: 3000 }, () => {
-//   return {
-//     ...generateMockEntry(),
-//     items: Array.from({ length: 8 }, generateMockEntry),
-//   };
-// });
-// console.log(mockDataArray);
+console.log(mockDataArray);
 
 function getUpdatedEntry(
   rowData: RowData,
@@ -35,7 +28,7 @@ function getUpdatedEntry(
 }
 
 function App() {
-  const [data, setData] = React.useState(mock1 as RowData[]);
+  const [data, setData] = React.useState(mock as RowData[]);
   const [openRows, setOpenRows] = React.useState<Set<string>>(new Set());
   const { setStorageEntries } = useLocalStorage({
     setDataByLocalStorage: setData,
