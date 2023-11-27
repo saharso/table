@@ -32,14 +32,14 @@ const columns: Column<RowData>[] = [
     ordinalNo: 2,
     title: "First Name",
     type: "string",
-    width: 100,
+    width: 250,
   },
   {
     id: "lastName",
     ordinalNo: 3,
     title: "Last Name",
     type: "string",
-    width: 100,
+    width: 250,
   },
   {
     id: "available",

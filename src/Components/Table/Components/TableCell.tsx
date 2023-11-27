@@ -8,7 +8,10 @@ import { v4 as uuId } from "uuid";
 import { useState } from "react";
 import { getCellWidth } from "../utils";
 import styles from "../Table.module.scss";
-import { makeStyles, MenuItem, Select } from "@mui/material";
+import { IconButton, MenuItem, Select, Switch, TextField } from "@mui/material";
+import CheckIcon from "@mui/icons-material/Check";
+import DoNotDisturbAltIcon from "@mui/icons-material/DoNotDisturbAlt";
+const rowHeight = 50;
 
 function SelectCell({
   options,
@@ -23,7 +26,7 @@ function SelectCell({
     <Select
       sx={{
         width: "100%",
-        height: 50,
+        height: rowHeight,
         borderRadius: 0,
         border: 0,
         "& .MuiOutlinedInput-notchedOutline": {
@@ -76,29 +79,48 @@ function EditableDataCell({
         </div>
       )}
       {isEditable && (
-        <div>
-          <input
-            type={type}
-            defaultValue={data}
-            onChange={(e) => {
-              setValue(e.target.value);
-            }}
-          />
-          <button
+        <div className={styles.EditableCell}>
+          <div className={styles.EditableCellInput}>
+            <TextField
+              sx={{
+                width: "100%",
+                "& .MuiOutlinedInput-notchedOutline": {},
+              }}
+              size="small"
+              type={type}
+              defaultValue={data}
+              onChange={(e) => {
+                setValue(e.target.value);
+              }}
+              onKeyUp={(e) => {
+                if (e.key === "Enter") {
+                  onSaveCell(value);
+                  onEdit(false);
+                }
+                if (e.key === "Escape") {
+                  onEdit(false);
+                }
+              }}
+            />
+          </div>
+          <IconButton
+            size={"small"}
+            araia-label="save"
             onClick={() => {
               onEdit(false);
-            }}
-          >
-            cancel
-          </button>
-          <button
-            onClick={() => {
               onSaveCell(value);
+            }}
+          >
+            <CheckIcon fontSize={"small"} color={"action"} />
+          </IconButton>
+          <IconButton
+            size={"small"}
+            onClick={() => {
               onEdit(false);
             }}
           >
-            Save
-          </button>
+            <DoNotDisturbAltIcon fontSize={"small"} />
+          </IconButton>
         </div>
       )}
     </div>
@@ -113,11 +135,7 @@ function BooleanCell({
 }) {
   return (
     <div>
-      <input
-        type="checkbox"
-        checked={data}
-        onChange={(e) => onSaveCell(e.target.checked)}
-      />
+      <Switch checked={data} onChange={(e) => onSaveCell(e.target.checked)} />
     </div>
   );
 }

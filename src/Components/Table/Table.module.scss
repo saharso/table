@@ -28,3 +28,11 @@ $row-height: 50px;
 .ToggleRowOpen {
   width: 32px;
 }
+.EditableCell {
+  display: flex;
+    align-items: center;
+}
+.EditableCellInput {
+  flex: 1;
+  width: 0;
+}
