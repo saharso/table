@@ -8,10 +8,11 @@ import { v4 as uuId } from "uuid";
 import { useState } from "react";
 import { getCellWidth } from "../utils";
 import styles from "../Table.module.scss";
+import { makeStyles, MenuItem, Select } from "@mui/material";
 
 function SelectCell({
   options,
-  data,
+  data = "",
   onSaveCell,
 }: {
   data: string;
@@ -19,17 +20,28 @@ function SelectCell({
   onSaveCell: (value: string) => void;
 }) {
   return (
-    <select
+    <Select
+      sx={{
+        width: "100%",
+        height: 50,
+        borderRadius: 0,
+        border: 0,
+        "& .MuiOutlinedInput-notchedOutline": {
+          border: 0,
+        },
+      }}
       value={data}
+      placeholder="Select"
       onChange={(e) => {
         onSaveCell(e.target.value);
       }}
     >
-      <option value="">Select</option>
       {options.map((option) => (
-        <option key={uuId()}>{option}</option>
+        <MenuItem key={uuId()} value={option}>
+          {option}
+        </MenuItem>
       ))}
-    </select>
+    </Select>
   );
 }
 function EditableDataCell({
