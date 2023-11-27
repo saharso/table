@@ -1,6 +1,6 @@
 export default interface RowUpdatePayload<Row = unknown> {
   row: Row;
   columnId: keyof Row;
-  value: string;
+  value: string | number | boolean;
   index?: number;
 }

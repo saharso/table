@@ -3,7 +3,12 @@ import { v4 as uuId } from "uuid";
 import { useState } from "react";
 import { getCellWidth } from "../utils";
 
-function OptionsCell({ options }: { options: string[] }) {
+function OptionsCell({
+  options,
+}: {
+  options: string[];
+  onSaveCell: (value: string) => void;
+}) {
   return (
     <select>
       <option value="">Select</option>
@@ -57,10 +62,20 @@ function EditableDataCell({
     </div>
   );
 }
-function BooleanCell({ data }: { data: boolean }) {
+function BooleanCell({
+  data,
+  onSaveCell,
+}: {
+  data: boolean;
+  onSaveCell: (value: boolean) => void;
+}) {
   return (
     <div>
-      <input type="checkbox" checked={data} onChange={() => {}} />
+      <input
+        type="checkbox"
+        checked={data}
+        onChange={(e) => onSaveCell(e.target.checked)}
+      />
     </div>
   );
 }
@@ -80,7 +95,12 @@ export default function TableCell<Row = unknown>({
   return (
     <div className={className} style={getCellWidth(column as Column)}>
       {column.type === "options" && (
-        <OptionsCell options={row[column.id] as string[]} />
+        <OptionsCell
+          options={row[column.id] as string[]}
+          onSaveCell={(value) => {
+            onCellUpdate({ row, columnId: column.id, value });
+          }}
+        />
       )}
       {column.type === "string" && (
         <EditableDataCell
@@ -91,7 +111,12 @@ export default function TableCell<Row = unknown>({
         />
       )}
       {column.type === "boolean" && (
-        <BooleanCell data={row[column.id] as boolean} />
+        <BooleanCell
+          data={row[column.id] as boolean}
+          onSaveCell={(value) => {
+            onCellUpdate({ row, columnId: column.id, value });
+          }}
+        />
       )}
       {column.type === "number" && (
         <EditableDataCell
