@@ -4,7 +4,7 @@ export default interface RowData {
   email: string;
   firstName: string;
   lastName: string;
-  options: string[];
+  options: string;
   phone: string;
   number: number;
   items: RowData[];

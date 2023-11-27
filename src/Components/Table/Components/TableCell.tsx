@@ -1,16 +1,24 @@
-import { Column, RowUpdatePayload } from "../types";
+import { Column, OptionsColumn, RowUpdatePayload } from "../types";
 import { v4 as uuId } from "uuid";
 import { useState } from "react";
 import { getCellWidth } from "../utils";
 
-function OptionsCell({
+function SelectCell({
   options,
+  data,
+  onSaveCell,
 }: {
+  data: string;
   options: string[];
   onSaveCell: (value: string) => void;
 }) {
   return (
-    <select>
+    <select
+      value={data}
+      onChange={(e) => {
+        onSaveCell(e.target.value);
+      }}
+    >
       <option value="">Select</option>
       {options.map((option) => (
         <option key={uuId()}>{option}</option>
@@ -98,8 +106,9 @@ export default function TableCell<Row = unknown>({
   return (
     <div className={className} style={getCellWidth(column as Column)}>
       {column.type === "options" && (
-        <OptionsCell
-          options={row[column.id] as string[]}
+        <SelectCell
+          data={row[column.id] as string}
+          options={(column as OptionsColumn).options}
           onSaveCell={onUpdate}
         />
       )}

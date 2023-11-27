@@ -1,10 +1,11 @@
-import React, { ForwardedRef, useEffect } from "react";
+import React, { useEffect } from "react";
 import "./App.scss";
 // import generateMockEntry from "./utils/createMocks";
 import mock1 from "./mocks/mock1.json";
 import { Table } from "./Components";
 import RowData from "./type/RowData";
 import { Column, RowUpdatePayload } from "./Components/Table/types";
+// import generateMockEntry from "./utils/createMocks";
 
 // // generate mock data
 // const mockDataArray = Array.from({ length: 3000 }, () => {
@@ -49,6 +50,7 @@ const columns: Column<RowData>[] = [
     title: "Options",
     type: "options",
     width: 200,
+    options: ["option1", "option2", "option3"],
   },
   {
     id: "phone",

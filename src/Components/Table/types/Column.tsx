@@ -6,7 +6,7 @@ interface DefaultColumn<Row = unknown> {
   width?: number;
 }
 
-interface OptionsColumn<Row = unknown> extends DefaultColumn<Row> {
+export interface OptionsColumn<Row = unknown> extends DefaultColumn<Row> {
   type: "options";
   options: string[];
 }
