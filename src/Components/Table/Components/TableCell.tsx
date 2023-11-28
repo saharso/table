@@ -5,7 +5,7 @@ import {
   RowUpdatePayload,
 } from "../types";
 import { v4 as uuId } from "uuid";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { getCellWidth } from "../utils";
 import styles from "../Table.module.scss";
 import { IconButton, MenuItem, Select, Switch, TextField } from "@mui/material";
@@ -156,9 +156,13 @@ export default function TableCell<Row = unknown>({
   onEdit,
   editable,
 }: TableCellProps<Row>) {
-  const onUpdate = (value: string | boolean) => {
-    onCellUpdate({ row, columnId: column.id as string, value });
-  };
+  const [value, setValue] = useState<string | boolean | number>();
+  const onUpdate = useCallback(
+    (value: string | boolean | number) => {
+      onCellUpdate({ row, columnId: column.id as string, value });
+    },
+    [onCellUpdate, column, row],
+  );
   const onCellEdit = (editMode: boolean) => {
     if (editMode) {
       onEdit({ columnId: column.id as string, index: index });
@@ -166,6 +170,7 @@ export default function TableCell<Row = unknown>({
       onEdit(null);
     }
   };
+
   return (
     <div className={styles.TableCell} style={getCellWidth(column as Column)}>
       {column.type === "options" && (
@@ -185,7 +190,12 @@ export default function TableCell<Row = unknown>({
         />
       )}
       {column.type === "boolean" && (
-        <BooleanCell data={row[column.id] as boolean} onSaveCell={onUpdate} />
+        <BooleanCell
+          data={row[column.id] as boolean}
+          onSaveCell={(value) => {
+            onUpdate(value);
+          }}
+        />
       )}
       {column.type === "number" && (
         <EditableDataCell

@@ -102,28 +102,42 @@ export default function Table<Row = unknown>({
             isGroupBy(row) && !collapsedRows.has(row.groupValue as string);
           return (
             <>
-              <GroupByHeader
-                row={row}
-                rowOpen={rowOpen}
-                onCollapseToggle={onToggleRowCollapse}
-                groupedColumn={groupedColumn as Column}
-              />
-              {rowOpen && (
-                <div className={styles.TableDrawer}>
-                  {row.items.map((row, index) => {
-                    return (
-                      <TableRow
-                        key={uuId()}
-                        columns={columnsWithoutGroupBy as Column[]}
-                        row={row}
-                        index={index}
-                        onCellUpdate={onCellUpdate as any}
-                        setEditable={setEditable}
-                        editable={editable}
-                      />
-                    );
-                  })}
-                </div>
+              {groupBy ? (
+                <>
+                  <GroupByHeader
+                    row={row}
+                    rowOpen={rowOpen}
+                    onCollapseToggle={onToggleRowCollapse}
+                    groupedColumn={groupedColumn as Column}
+                  />
+                  {rowOpen && (
+                    <div className={styles.TableDrawer}>
+                      {row.items.map((row, index) => {
+                        return (
+                          <TableRow
+                            key={uuId()}
+                            columns={columnsWithoutGroupBy as Column[]}
+                            row={row}
+                            index={index}
+                            onCellUpdate={onCellUpdate as any}
+                            setEditable={setEditable}
+                            editable={editable}
+                          />
+                        );
+                      })}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <TableRow
+                  key={uuId()}
+                  columns={sortedColumns as Column[]}
+                  row={row}
+                  index={index}
+                  onCellUpdate={onCellUpdate as any}
+                  setEditable={setEditable}
+                  editable={editable}
+                />
               )}
             </>
           );
