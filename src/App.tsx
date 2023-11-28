@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
@@ -12,29 +18,22 @@ import { columns } from "./const";
 import { useLocalStorage, useSearch } from "./hooks";
 import { produce } from "immer";
 
-function getUpdatedEntry(
-  rowData: RowData,
-  prev: Record<string, RowData>,
-  update: RowUpdatePayload<RowData>,
-) {
-  const shallowClone = { ...prev };
-  shallowClone[rowData.id as string] = {
-    ...rowData,
-    [update.columnId]: update.value,
-  };
-  return shallowClone;
-}
-
 function App() {
-  const [data, setData] = React.useState(mock as RowData[]);
-  const { setStorageEntries } = useLocalStorage({
-    setDataByLocalStorage: setData,
+  const [data, setData] = useState(mock as RowData[]);
+  const [update, setUpdate] = useState<RowUpdatePayload<RowData>>();
+  useLocalStorage({
+    setDataByLocalStorage: setData as unknown as Dispatch<
+      SetStateAction<Record<string, unknown>[]>
+    >,
+    update,
+    identifier: "id",
   });
   const { searchValue, setSearchValue, filteredData } = useSearch<RowData>({
     data,
-    keys: ["firstName", "lastName", "email"],
+    keys: ["firstName", "lastName", "email", "options"],
   });
   const onCellUpdate = useCallback((update: RowUpdatePayload<RowData>) => {
+    setUpdate(update);
     setData((prevData) =>
       produce(prevData, (draftData) => {
         const rowIndex = draftData.findIndex(
@@ -44,9 +43,6 @@ function App() {
           const row = draftData[rowIndex] as RowData;
           const columnId = update.columnId as keyof RowData;
           (row[columnId] as string) = update.value as string;
-          setStorageEntries((prev) => {
-            return getUpdatedEntry(draftData[rowIndex], prev, update);
-          });
         }
       }),
     );
