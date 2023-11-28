@@ -11,6 +11,10 @@ body {
   display: flex;
   align-items: center;
 }
+.layout-spread {
+  width: 0;
+  flex-grow: 1;
+}
 .gap-1 {
   gap: 4px;
 }

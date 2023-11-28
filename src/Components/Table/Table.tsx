@@ -69,11 +69,12 @@ export default function Table<Row = Pojo>({
             <>
               {groupBy ? (
                 <>
-                  <GroupByHeader
+                  <GroupByHeader<Row>
                     row={row as GroupBy}
                     rowOpen={rowOpen}
                     onCollapseToggle={onToggleRowCollapse}
                     groupedColumn={groupedColumn as Column}
+                    items={row.items as Row[]}
                   />
                   {rowOpen && (
                     <div className={styles.TableDrawer}>
