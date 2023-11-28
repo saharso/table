@@ -11,7 +11,7 @@ import { Table, ToolBar } from "./Components";
 import RowData from "./type/RowData";
 import { RowUpdatePayload } from "./Components/Table/types";
 import { columns } from "./const";
-import { useLocalStorage, useSearch } from "./hooks";
+import { useCellUpdate, useLocalStorage, useSearch } from "./hooks";
 import { produce } from "immer";
 
 const originalData = mock as RowData[];
@@ -29,21 +29,12 @@ function App() {
     data,
     keys: ["firstName", "lastName", "email", "options", "phone", "number"],
   });
-  const onCellUpdate = useCallback((update: RowUpdatePayload) => {
-    setUpdate(update);
-    setData((prevData) =>
-      produce(prevData, (draftData) => {
-        const rowIndex = draftData.findIndex(
-          (rowData) => rowData[identifier] === update.row[identifier],
-        );
-        if (rowIndex !== -1) {
-          const row = draftData[rowIndex] as RowData;
-          const columnId = update.columnId as keyof RowData;
-          (row[columnId] as string) = update.value as string;
-        }
-      }),
-    );
-  }, []);
+
+  const { onCellUpdate } = useCellUpdate<RowData>({
+    setUpdate,
+    setData,
+    identifier,
+  });
 
   return (
     <div className="App">
