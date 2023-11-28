@@ -8,7 +8,6 @@ import {
   ListItemButton,
   Paper,
   Popper,
-  PopperPlacementType,
   TextField,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
@@ -16,12 +15,16 @@ import React from "react";
 import styles from "./ToolBar.module.scss";
 import { debounce } from "lodash";
 import { Column, Pojo } from "../Table/types";
-
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
 interface ColumnFilterDropDownProps<Row = Pojo> {
   columns: Column<Row>[];
+  selectedColumns: Set<string>;
+  onFilterColumnChange: (columnId: string) => void;
 }
 function ColumnFilterDropDown<Row = Pojo>({
   columns,
+  selectedColumns,
+  onFilterColumnChange,
 }: ColumnFilterDropDownProps<Row>) {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null,
@@ -36,9 +39,13 @@ function ColumnFilterDropDown<Row = Pojo>({
     setOpen(false);
     setAnchorEl(null);
   };
+
   return (
     <div>
-      <Button onClick={handleClick()}>Filter Columns</Button>
+      <Button onClick={handleClick()}>
+        <FilterAltIcon />
+        Filter Columns
+      </Button>
       <Popper
         open={open}
         anchorEl={anchorEl}
@@ -64,12 +71,14 @@ function ColumnFilterDropDown<Row = Pojo>({
                       <ListItem key={column.id as string} sx={{ padding: 0 }}>
                         <ListItemButton
                           role={undefined}
-                          onClick={(value) => {}}
+                          onClick={(value) => {
+                            onFilterColumnChange(column.id as string);
+                          }}
                           dense
                         >
                           <Checkbox
                             edge="start"
-                            checked={true}
+                            checked={selectedColumns.has(column.id as string)}
                             tabIndex={-1}
                             disableRipple
                           />
@@ -89,14 +98,18 @@ function ColumnFilterDropDown<Row = Pojo>({
 }
 interface ToolBarProps<Row = Pojo> {
   onSearch: (value: string) => void;
-  searchValue: string;
   columns: Column<Row>[];
+  selectedColumns: Set<string>;
+  onFilterColumnChange: (columnId: string) => void;
+  groupBy?: keyof Row;
 }
 
 export default function ToolBar<Row = Pojo>({
   onSearch,
-  searchValue,
   columns,
+  selectedColumns,
+  onFilterColumnChange,
+  groupBy,
 }: ToolBarProps<Row>) {
   const [displayValue, setDisplayValue] = React.useState<string>("");
   const debouncedInputChange = debounce((value: string) => {
@@ -106,10 +119,15 @@ export default function ToolBar<Row = Pojo>({
     debouncedInputChange(e.target.value);
     setDisplayValue(e.target.value);
   };
+  const nonGroupedColumns = columns.filter(({ id }) => id !== groupBy);
   return (
     <div className={styles.ToolBar}>
       <div className={"layout-align-y gap-2"}>
-        <ColumnFilterDropDown<Row> columns={columns} />
+        <ColumnFilterDropDown<Row>
+          columns={nonGroupedColumns}
+          selectedColumns={selectedColumns}
+          onFilterColumnChange={onFilterColumnChange}
+        />
         <label htmlFor={"search"}>Search</label>
         <TextField
           id={"search"}

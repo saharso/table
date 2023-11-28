@@ -18,6 +18,7 @@ interface TableProps<Row = Pojo> {
   onCellUpdate?: ({ row, columnId, value, index }: RowUpdatePayload) => void;
   removeHeader?: boolean;
   groupBy?: keyof Row;
+  selectedColumns?: Set<string>;
 }
 
 interface TableRowProps<Row = Pojo> {
@@ -63,16 +64,23 @@ export default function Table<Row = Pojo>({
   onCellUpdate,
   removeHeader,
   groupBy,
+  selectedColumns,
 }: TableProps<Row>) {
-  const sortedColumns = useMemo(
-    () => columns.sort((a, b) => a.ordinalNo - b.ordinalNo),
-    [columns],
+  const displayColumns = useMemo(
+    () =>
+      columns
+        .sort((a, b) => a.ordinalNo - b.ordinalNo)
+        .filter(({ id }) => {
+          if (id === groupBy) return true;
+          return selectedColumns.has(id as string);
+        }),
+    [columns, groupBy, selectedColumns],
   );
   const [editable, setEditable] = useState<CellEditPayload>();
   const { data, isGroupBy, groupedColumn, columnsWithoutGroupBy } = useGroupBy({
     groupBy,
     rows,
-    columns: sortedColumns,
+    columns: displayColumns,
   });
   const [collapsedRows, setCollapsedRows] = React.useState<Set<string>>(
     new Set(),
@@ -126,7 +134,7 @@ export default function Table<Row = Pojo>({
               ) : (
                 <TableRow
                   key={uuId()}
-                  columns={sortedColumns as Column[]}
+                  columns={displayColumns as Column[]}
                   row={row as Pojo}
                   index={index}
                   onCellUpdate={onCellUpdate as any}
