@@ -54,7 +54,6 @@ function App() {
       <Table<RowData>
         rows={filteredData}
         columns={columns}
-        identifier={"id"}
         onCellUpdate={onCellUpdate}
         groupBy={"firstName"}
       />

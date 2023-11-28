@@ -9,7 +9,6 @@ import { v4 as uuId } from "uuid";
 interface TableProps<Row = unknown> {
   rows: Row[];
   columns: Column<Row>[];
-  identifier?: keyof Row;
   onCellUpdate?: ({
     row,
     columnId,
@@ -61,7 +60,6 @@ export default function Table<Row = unknown>({
   rows,
   columns,
   onCellUpdate,
-  identifier,
   removeHeader,
   groupBy,
 }: TableProps<Row>) {
@@ -83,11 +81,7 @@ export default function Table<Row = unknown>({
     setCollapsedRows((prev) => {
       const newPrev = new Set(prev);
       const id = row.groupValue as string;
-      if (newPrev.has(id)) {
-        newPrev.delete(id);
-      } else {
-        newPrev.add(id);
-      }
+      newPrev.has(id) ? newPrev.delete(id) : newPrev.add(id);
       return newPrev;
     });
   };
