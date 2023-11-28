@@ -18,26 +18,27 @@ import { columns } from "./const";
 import { useLocalStorage, useSearch } from "./hooks";
 import { produce } from "immer";
 
+const originalData = mock as RowData[];
+const identifier = "id";
+
 function App() {
-  const [data, setData] = useState(mock as RowData[]);
-  const [update, setUpdate] = useState<RowUpdatePayload<RowData>>();
-  useLocalStorage({
-    setDataByLocalStorage: setData as unknown as Dispatch<
-      SetStateAction<Record<string, unknown>[]>
-    >,
+  const [data, setData] = useState(originalData);
+  const [update, setUpdate] = useState<RowUpdatePayload>();
+  useLocalStorage<RowData>({
+    setDataByLocalStorage: setData,
     update,
-    identifier: "id",
+    identifier: identifier,
   });
   const { searchValue, setSearchValue, filteredData } = useSearch<RowData>({
     data,
-    keys: ["firstName", "lastName", "email", "options"],
+    keys: ["firstName", "lastName", "email", "options", "phone", "number"],
   });
-  const onCellUpdate = useCallback((update: RowUpdatePayload<RowData>) => {
+  const onCellUpdate = useCallback((update: RowUpdatePayload) => {
     setUpdate(update);
     setData((prevData) =>
       produce(prevData, (draftData) => {
         const rowIndex = draftData.findIndex(
-          (rowData) => rowData.id === update.row.id,
+          (rowData) => rowData[identifier] === update.row[identifier],
         );
         if (rowIndex !== -1) {
           const row = draftData[rowIndex] as RowData;

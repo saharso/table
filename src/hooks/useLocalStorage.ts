@@ -1,15 +1,13 @@
 import React, { useEffect } from "react";
-import { RowUpdatePayload } from "../Components/Table/types";
+import { Pojo, RowUpdatePayload } from "../Components/Table/types";
 const storageName = "storageEntries";
 
-export default function useLocalStorage({
+export default function useLocalStorage<Row = Pojo>({
   setDataByLocalStorage,
   update,
   identifier,
 }: {
-  setDataByLocalStorage: React.Dispatch<
-    React.SetStateAction<Record<string, unknown>[]>
-  >;
+  setDataByLocalStorage: React.Dispatch<React.SetStateAction<Row[]>>;
   update: RowUpdatePayload;
   identifier: string;
 }) {
@@ -32,7 +30,7 @@ export default function useLocalStorage({
     storageEntries &&
       setDataByLocalStorage((prev) => {
         return prev.map((d) => {
-          const lcRow = storageEntries[d[identifier] as string];
+          const lcRow = storageEntries[d[identifier as keyof Row]];
           if (lcRow) {
             return lcRow;
           }

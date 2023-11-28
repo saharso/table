@@ -1,4 +1,6 @@
-interface DefaultColumn<Row = unknown> {
+import Pojo from "./Pojo";
+
+interface DefaultColumn<Row = Pojo> {
   id: keyof Row;
   ordinalNo: number;
   title: string;
@@ -6,11 +8,11 @@ interface DefaultColumn<Row = unknown> {
   width?: number;
 }
 
-export interface OptionsColumn<Row = unknown> extends DefaultColumn<Row> {
+export interface OptionsColumn<Row = Pojo> extends DefaultColumn<Row> {
   type: "options";
   options: string[];
 }
 
-type Column<Row = unknown> = DefaultColumn<Row> | OptionsColumn<Row>;
+type Column<Row = Pojo> = DefaultColumn<Row> | OptionsColumn<Row>;
 
 export default Column;

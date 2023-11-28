@@ -2,6 +2,7 @@ import {
   CellEditPayload,
   Column,
   OptionsColumn,
+  Pojo,
   RowUpdatePayload,
 } from "../types";
 import { v4 as uuId } from "uuid";
@@ -149,7 +150,7 @@ function BooleanCell({
     </div>
   );
 }
-interface TableCellProps<Row = unknown> {
+interface TableCellProps<Row = Pojo> {
   row: Row;
   column: Column<Row>;
   onCellUpdate: ({ row, columnId, value }: RowUpdatePayload<Row>) => void;
@@ -158,7 +159,7 @@ interface TableCellProps<Row = unknown> {
   editable: CellEditPayload;
 }
 
-export default function TableCell<Row = unknown>({
+export default function TableCell<Row = Pojo>({
   row,
   column,
   onCellUpdate,
@@ -166,7 +167,6 @@ export default function TableCell<Row = unknown>({
   onEdit,
   editable,
 }: TableCellProps<Row>) {
-  const [value, setValue] = useState<string | boolean | number>();
   const onUpdate = useCallback(
     (value: string | boolean | number) => {
       onCellUpdate({ row, columnId: column.id as string, value });

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { getGroupBy } from "../utils";
-import { Column, GroupBy } from "../types";
+import { Column, GroupBy, Pojo } from "../types";
 
 interface GroupByHook<Row> {
   groupBy: keyof Row;
@@ -8,10 +8,10 @@ interface GroupByHook<Row> {
   columns: Column<Row>[];
 }
 
-function isGroupBy(groupBy: any): groupBy is GroupBy<unknown> {
+function isGroupBy(groupBy: any): groupBy is GroupBy {
   return Reflect.has(groupBy, "items") && Reflect.has(groupBy, "groupValue");
 }
-export default function useGroupBy<Row = unknown>({
+export default function useGroupBy<Row = Pojo>({
   groupBy,
   rows,
   columns,

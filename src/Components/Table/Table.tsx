@@ -1,25 +1,26 @@
-import { CellEditPayload, Column, GroupBy, RowUpdatePayload } from "./types";
+import {
+  CellEditPayload,
+  Column,
+  GroupBy,
+  Pojo,
+  RowUpdatePayload,
+} from "./types";
 import styles from "./Table.module.scss";
 import { Virtuoso } from "react-virtuoso";
 import { GroupByHeader, TableCell, TableHead } from "./Components";
-import React, { FC, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import useGroupBy from "./hooks/useGroupBy";
 import { v4 as uuId } from "uuid";
 
-interface TableProps<Row = unknown> {
+interface TableProps<Row = Pojo> {
   rows: Row[];
   columns: Column<Row>[];
-  onCellUpdate?: ({
-    row,
-    columnId,
-    value,
-    index,
-  }: RowUpdatePayload<Row>) => void;
+  onCellUpdate?: ({ row, columnId, value, index }: RowUpdatePayload) => void;
   removeHeader?: boolean;
   groupBy?: keyof Row;
 }
 
-interface TableRowProps<Row = unknown> {
+interface TableRowProps<Row = Pojo> {
   columns: Column<Row>[];
   row: Row;
   onCellUpdate?: ({ row, columnId, value, index }: RowUpdatePayload) => void;
@@ -56,7 +57,7 @@ const TableRow = React.memo(
   },
 );
 
-export default function Table<Row = unknown>({
+export default function Table<Row = Pojo>({
   rows,
   columns,
   onCellUpdate,
@@ -91,7 +92,7 @@ export default function Table<Row = unknown>({
       <Virtuoso
         data={data as never[]}
         useWindowScroll
-        itemContent={(index, row: GroupBy) => {
+        itemContent={(index, row: GroupBy | Pojo) => {
           const rowOpen =
             isGroupBy(row) && !collapsedRows.has(row.groupValue as string);
           return (
@@ -99,7 +100,7 @@ export default function Table<Row = unknown>({
               {groupBy ? (
                 <>
                   <GroupByHeader
-                    row={row}
+                    row={row as GroupBy}
                     rowOpen={rowOpen}
                     onCollapseToggle={onToggleRowCollapse}
                     groupedColumn={groupedColumn as Column}
@@ -126,7 +127,7 @@ export default function Table<Row = unknown>({
                 <TableRow
                   key={uuId()}
                   columns={sortedColumns as Column[]}
-                  row={row}
+                  row={row as Pojo}
                   index={index}
                   onCellUpdate={onCellUpdate as any}
                   setEditable={setEditable}

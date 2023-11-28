@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import Fuse from "fuse.js";
+import { Pojo } from "../Components/Table/types";
 
 interface UseSearchProps<Row> {
   data: Row[];
   keys: Array<keyof Row>;
 }
-export default function useSearch<Row = unknown>({
+export default function useSearch<Row = Pojo>({
   data,
   keys,
 }: UseSearchProps<Row>) {
