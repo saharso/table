@@ -11,8 +11,7 @@ export default function getGroupBy<Row = unknown>(
     if (!groupedData[groupValue]) {
       groupedData[groupValue] = { groupValue, items: [row] };
     } else {
-      const { [field]: _, ...rest } = row;
-      groupedData[groupValue].items.push(rest);
+      groupedData[groupValue].items.push(row);
     }
   });
 
