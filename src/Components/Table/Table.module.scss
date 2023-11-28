@@ -17,7 +17,7 @@ $row-height: 50px;
   border-bottom: 1px solid #e0e0e0;
 }
 .TableCell {
-    padding: 0 16px;
+    padding: 4px 16px;
     &:first-child {
         padding-left: 24px;
     }
@@ -38,7 +38,7 @@ $row-height: 50px;
 }
 .TableDrawer {
   background-color: #eef6ff;
-  padding: 30px 4px 40px;
+  padding: 16px 4px 40px;
   box-shadow: -8px 192px 15px -196px rgba(0,0,30,0.15) inset;
 }
 .GroupByHeader {
@@ -46,4 +46,15 @@ $row-height: 50px;
   top: $row-height;
   background-color: #ffffff;
   z-index: 1;
+}
+
+.DataCell {
+  &.ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  &.break-word {
+    word-break: break-word;
+  }
 }

@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import DoNotDisturbAltIcon from "@mui/icons-material/DoNotDisturbAlt";
+import classNames from "classnames";
 const rowHeight = 50;
 
 function SelectCell({
@@ -61,6 +62,7 @@ function EditableDataCell({
   onEdit,
   editable,
   cellId,
+  column,
 }: {
   data: string;
   onSaveCell: (value: string) => void;
@@ -68,6 +70,7 @@ function EditableDataCell({
   onEdit: (editMode: boolean) => void;
   editable: CellEditPayload;
   cellId: CellEditPayload;
+  column: Column;
 }) {
   const [value, setValue] = useState(data);
   const isEditable =
@@ -75,9 +78,10 @@ function EditableDataCell({
     Object.values(editable).join("") === Object.values(cellId).join("");
 
   return (
-    <div data-test={"editable-string-cell"}>
+    <div>
       {!isEditable && (
         <div
+          className={classNames(styles.DataCell, styles[column.overflow])}
           onClick={() => {
             onEdit(true);
           }}
@@ -197,6 +201,7 @@ export default function TableCell<Row = Pojo>({
           onEdit={onCellEdit}
           editable={editable}
           cellId={{ columnId: column.id as string, index: index }}
+          column={column as Column}
         />
       )}
       {column.type === "boolean" && (
@@ -215,6 +220,7 @@ export default function TableCell<Row = Pojo>({
           onEdit={onCellEdit}
           editable={editable}
           cellId={{ columnId: column.id as string, index: index }}
+          column={column as Column}
         />
       )}
     </div>

@@ -8,6 +8,7 @@ const columns: Column<RowData>[] = [
     title: "Email",
     type: "string",
     width: 300,
+    overflow: "ellipsis",
   },
   {
     id: "firstName",
@@ -43,7 +44,7 @@ const columns: Column<RowData>[] = [
     ordinalNo: 5,
     title: "Phone",
     type: "string",
-    // width: 200,
+    minWidth: 300,
   },
   {
     id: "number",
@@ -51,6 +52,8 @@ const columns: Column<RowData>[] = [
     title: "Number",
     type: "number",
     width: 200,
+    overflow: "break-word",
+    minWidth: 100,
   },
 ];
 
