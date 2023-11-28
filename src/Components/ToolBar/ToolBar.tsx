@@ -1,14 +1,103 @@
-import { TextField } from "@mui/material";
+import {
+  Button,
+  Checkbox,
+  ClickAwayListener,
+  Fade,
+  List,
+  ListItem,
+  ListItemButton,
+  Paper,
+  Popper,
+  PopperPlacementType,
+  TextField,
+} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import React from "react";
 import styles from "./ToolBar.module.scss";
 import { debounce } from "lodash";
+import { Column, Pojo } from "../Table/types";
 
-interface ToolBarProps {
+interface ColumnFilterDropDownProps<Row = Pojo> {
+  columns: Column<Row>[];
+}
+function ColumnFilterDropDown<Row = Pojo>({
+  columns,
+}: ColumnFilterDropDownProps<Row>) {
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
+    null,
+  );
+  const [open, setOpen] = React.useState(false);
+
+  const handleClick = () => (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+    setOpen((prev) => !prev);
+  };
+  const handleClose = () => {
+    setOpen(false);
+    setAnchorEl(null);
+  };
+  return (
+    <div>
+      <Button onClick={handleClick()}>Filter Columns</Button>
+      <Popper
+        open={open}
+        anchorEl={anchorEl}
+        placement={"bottom-end"}
+        transition
+        sx={{
+          zIndex: 1500,
+        }}
+      >
+        {({ TransitionProps }) => (
+          <ClickAwayListener onClickAway={handleClose}>
+            <Fade {...TransitionProps} timeout={350}>
+              <Paper>
+                <List
+                  sx={{
+                    width: "100%",
+                    maxWidth: 360,
+                    bgcolor: "background.paper",
+                  }}
+                >
+                  {columns.map((column) => {
+                    return (
+                      <ListItem key={column.id as string} sx={{ padding: 0 }}>
+                        <ListItemButton
+                          role={undefined}
+                          onClick={(value) => {}}
+                          dense
+                        >
+                          <Checkbox
+                            edge="start"
+                            checked={true}
+                            tabIndex={-1}
+                            disableRipple
+                          />
+                          {column.title}
+                        </ListItemButton>
+                      </ListItem>
+                    );
+                  })}
+                </List>
+              </Paper>
+            </Fade>
+          </ClickAwayListener>
+        )}
+      </Popper>
+    </div>
+  );
+}
+interface ToolBarProps<Row = Pojo> {
   onSearch: (value: string) => void;
   searchValue: string;
+  columns: Column<Row>[];
 }
-export default function ToolBar({ onSearch, searchValue }: ToolBarProps) {
+
+export default function ToolBar<Row = Pojo>({
+  onSearch,
+  searchValue,
+  columns,
+}: ToolBarProps<Row>) {
   const [displayValue, setDisplayValue] = React.useState<string>("");
   const debouncedInputChange = debounce((value: string) => {
     onSearch(value);
@@ -20,6 +109,7 @@ export default function ToolBar({ onSearch, searchValue }: ToolBarProps) {
   return (
     <div className={styles.ToolBar}>
       <div className={"layout-align-y gap-2"}>
+        <ColumnFilterDropDown<Row> columns={columns} />
         <label htmlFor={"search"}>Search</label>
         <TextField
           id={"search"}
