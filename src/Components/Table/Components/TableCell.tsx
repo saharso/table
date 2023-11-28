@@ -8,7 +8,13 @@ import { v4 as uuId } from "uuid";
 import { useCallback, useState } from "react";
 import { getCellWidth } from "../utils";
 import styles from "../Table.module.scss";
-import { IconButton, MenuItem, Select, Switch, TextField } from "@mui/material";
+import {
+  Checkbox,
+  IconButton,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import DoNotDisturbAltIcon from "@mui/icons-material/DoNotDisturbAlt";
 const rowHeight = 50;
@@ -135,7 +141,11 @@ function BooleanCell({
 }) {
   return (
     <div>
-      <Switch checked={data} onChange={(e) => onSaveCell(e.target.checked)} />
+      <Checkbox
+        sx={{ borderRadius: 5000 }}
+        checked={data}
+        onChange={(e) => onSaveCell(e.target.checked)}
+      />
     </div>
   );
 }
