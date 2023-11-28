@@ -20,7 +20,6 @@
     "faker": "^5.5.3",
     "fuse.js": "^7.0.0",
     "immer": "^10.0.3",
-    "immutable": "^5.0.0-beta.4",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
