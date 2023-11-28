@@ -6,6 +6,8 @@ interface DefaultColumn<Row = Pojo> {
   title: string;
   type: "string" | "number" | "boolean" | "options";
   width?: number;
+  minWidth?: number;
+  overflow?: "ellipsis" | "break-word";
 }
 
 export interface OptionsColumn<Row = Pojo> extends DefaultColumn<Row> {
