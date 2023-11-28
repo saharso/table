@@ -19,14 +19,17 @@ export default function GroupByHeader({
   groupedColumn,
 }: GroupByRowProps) {
   return (
-    <div className={classNames(styles.TableRow, styles.GroupByHeader)}>
+    <div
+      className={classNames(styles.TableRow, styles.GroupByHeader)}
+      role="rowheader"
+    >
       <div className={styles.ToggleRowOpen}>
         <IconButton onClick={() => onCollapseToggle(row)}>
           {rowOpen ? <ExpandMoreIcon /> : <ChevronRightIcon />}
         </IconButton>
       </div>
 
-      <div>
+      <div role={"cell"}>
         <span>{groupedColumn.title}</span>
         :&nbsp;
         <span>{row.groupValue}</span>

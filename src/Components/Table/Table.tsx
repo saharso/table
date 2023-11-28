@@ -7,7 +7,7 @@ import {
 } from "./types";
 import styles from "./Table.module.scss";
 import { Virtuoso } from "react-virtuoso";
-import { GroupByHeader, TableCell, TableHead } from "./Components";
+import { GroupByHeader, TableHead, TableRow } from "./Components";
 import React, { useMemo, useState } from "react";
 import useGroupBy from "./hooks/useGroupBy";
 import { v4 as uuId } from "uuid";
@@ -16,53 +16,14 @@ interface TableProps<Row = Pojo> {
   rows: Row[];
   columns: Column<Row>[];
   onCellUpdate?: ({ row, columnId, value, index }: RowUpdatePayload) => void;
-  removeHeader?: boolean;
   groupBy?: keyof Row;
   selectedColumns?: Set<string>;
 }
-
-interface TableRowProps<Row = Pojo> {
-  columns: Column<Row>[];
-  row: Row;
-  onCellUpdate?: ({ row, columnId, value, index }: RowUpdatePayload) => void;
-  index?: number;
-  setEditable: React.Dispatch<CellEditPayload>;
-  editable: CellEditPayload;
-}
-const TableRow = React.memo(
-  ({
-    columns,
-    row,
-    index,
-    onCellUpdate,
-    setEditable,
-    editable,
-  }: TableRowProps) => {
-    return (
-      <div className={styles.TableRow}>
-        {columns.map((column) => {
-          return (
-            <TableCell
-              key={column.id as string}
-              row={row}
-              column={column}
-              onCellUpdate={onCellUpdate}
-              index={index}
-              onEdit={setEditable}
-              editable={editable}
-            />
-          );
-        })}
-      </div>
-    );
-  },
-);
 
 export default function Table<Row = Pojo>({
   rows,
   columns,
   onCellUpdate,
-  removeHeader,
   groupBy,
   selectedColumns,
 }: TableProps<Row>) {
@@ -95,9 +56,10 @@ export default function Table<Row = Pojo>({
     });
   };
   return (
-    <div className={styles.Table}>
-      {!removeHeader && <TableHead columns={columnsWithoutGroupBy} />}
+    <div className={styles.Table} role={"table"}>
+      <TableHead columns={columnsWithoutGroupBy} />
       <Virtuoso
+        role="rowgroup"
         data={data as never[]}
         useWindowScroll
         itemContent={(index, row: GroupBy | Pojo) => {

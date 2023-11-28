@@ -11,10 +11,13 @@ export default function TableHead<Row = Pojo>({
   columns,
 }: TableHeadProps<Row>) {
   return (
-    <div className={classNames(styles.TableRow, styles.TableHead)}>
-      <div className={styles.ToggleRowOpen} />
+    <div
+      className={classNames(styles.TableRow, styles.TableHead)}
+      role="rowgroup"
+    >
       {columns.map((column) => (
         <div
+          role="columnheader"
           className={styles.TableCell}
           style={getCellWidth(column as Column)}
           key={column.id as string}

@@ -186,7 +186,11 @@ export default function TableCell<Row = Pojo>({
   };
 
   return (
-    <div className={styles.TableCell} style={getCellWidth(column as Column)}>
+    <div
+      className={styles.TableCell}
+      style={getCellWidth(column as Column)}
+      role={"cell"}
+    >
       {column.type === "options" && (
         <SelectCell
           data={row[column.id] as string}
