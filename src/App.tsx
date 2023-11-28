@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
@@ -10,6 +10,7 @@ import RowData from "./type/RowData";
 import { RowUpdatePayload } from "./Components/Table/types";
 import { columns } from "./const";
 import { useLocalStorage, useSearch } from "./hooks";
+import { produce } from "immer";
 
 function getUpdatedEntry(
   rowData: RowData,
@@ -33,21 +34,23 @@ function App() {
     data,
     keys: ["firstName", "lastName", "email"],
   });
-  const onCellUpdate = useCallback(
-    (update: RowUpdatePayload<RowData>) => {
-      const updatedData = data.map((rowData) => {
-        if (rowData.id === update.row.id) {
+  const onCellUpdate = useCallback((update: RowUpdatePayload<RowData>) => {
+    setData((prevData) =>
+      produce(prevData, (draftData) => {
+        const rowIndex = draftData.findIndex(
+          (rowData) => rowData.id === update.row.id,
+        );
+        if (rowIndex !== -1) {
+          const row = draftData[rowIndex] as RowData;
+          const columnId = update.columnId as keyof RowData;
+          (row[columnId] as string) = update.value as string;
           setStorageEntries((prev) => {
-            return getUpdatedEntry(rowData, prev, update);
+            return getUpdatedEntry(draftData[rowIndex], prev, update);
           });
-          return { ...rowData, [update.columnId]: update.value };
         }
-        return rowData;
-      });
-      setData(updatedData);
-    },
-    [data],
-  );
+      }),
+    );
+  }, []);
 
   return (
     <div className="App">
