@@ -11,7 +11,7 @@ export default function App() {
         columns={mock1columns}
         data={mock1 as Mock1Model[]}
         identifier={"id"}
-        groupBy={"firstName"}
+        groupBy={"lastName"}
       />
     </div>
   );
