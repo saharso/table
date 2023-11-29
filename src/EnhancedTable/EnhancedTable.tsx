@@ -21,15 +21,18 @@ function EnhancedTable<Row = Pojo>({
   identifier,
   groupBy,
 }: EnhancedTableProps<Row>) {
-  const [rows, setRows] = useState<Row[]>(data);
+  const [rows, setRows] = useState<Row[]>();
   const [update, setUpdate] = useState<RowUpdatePayload>();
+
   useLocalStorage<Row>({
     setDataByLocalStorage: setRows,
     update,
     identifier,
+    dataReady: Array.isArray(rows),
   });
+
   const { setSearchValue, filteredData } = useSearch<Row>({
-    data: rows,
+    data: rows || [],
     keys: columns.map((column) => column.id),
   });
 
@@ -44,8 +47,8 @@ function EnhancedTable<Row = Pojo>({
   });
 
   useEffect(() => {
-    setRows(rows);
-  }, [rows]);
+    setRows(data);
+  }, [data]);
 
   return (
     <div className="EnhancedTable">

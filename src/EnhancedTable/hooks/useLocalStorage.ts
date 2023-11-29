@@ -6,10 +6,12 @@ export default function useLocalStorage<Row = Pojo>({
   setDataByLocalStorage,
   update,
   identifier,
+  dataReady,
 }: {
   setDataByLocalStorage: React.Dispatch<React.SetStateAction<Row[]>>;
   update: RowUpdatePayload;
   identifier: keyof Row;
+  dataReady: boolean;
 }) {
   const [storageEntries, setStorageEntries] = React.useState<
     Record<string, Record<string, unknown>>
@@ -18,6 +20,7 @@ export default function useLocalStorage<Row = Pojo>({
   useEffect(() => {
     if (Object.keys(storageEntries).length !== 0) {
       const previousEntries = JSON.parse(localStorage.getItem(storageName));
+      console.log(previousEntries);
       localStorage.setItem(
         storageName,
         JSON.stringify({ ...previousEntries, ...storageEntries }),
@@ -27,17 +30,18 @@ export default function useLocalStorage<Row = Pojo>({
 
   useEffect(() => {
     const storageEntries = JSON.parse(localStorage.getItem(storageName));
-    storageEntries &&
-      setDataByLocalStorage((prev) => {
-        return prev.map((d) => {
-          const lcRow = storageEntries[d[identifier as keyof Row]];
-          if (lcRow) {
-            return lcRow;
-          }
-          return d;
-        });
+    if (!storageEntries || !dataReady) return;
+
+    setDataByLocalStorage((prev) => {
+      return prev.map((d) => {
+        const lcRow = storageEntries[d[identifier as keyof Row]];
+        if (lcRow) {
+          return lcRow;
+        }
+        return d;
       });
-  }, [identifier, setDataByLocalStorage]);
+    });
+  }, [dataReady, identifier, setDataByLocalStorage]);
 
   useEffect(() => {
     setStorageEntries((prev) => {

@@ -47,6 +47,8 @@ export default function Table<Row = Pojo>({
       return setToggle(prev, id);
     });
   };
+
+  if (!data || data.length === 0) return <div>No rows to show</div>;
   return (
     <div className={styles.Table} role={"table"}>
       <TableHead columns={columnsWithoutGroupBy} />
