@@ -4,7 +4,7 @@ import {
   GroupBy,
   Pojo,
   RowUpdatePayload,
-} from "./types";
+} from "../../types";
 import styles from "./Table.module.scss";
 import { Virtuoso } from "react-virtuoso";
 import { GroupByHeader, TableHead, TableRow } from "./Components";

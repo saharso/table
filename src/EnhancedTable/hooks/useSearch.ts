@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import Fuse from "fuse.js";
-import { Pojo } from "../Components/Table/types";
+import { Pojo } from "../types";
 
 interface UseSearchProps<Row> {
   data: Row[];
@@ -26,6 +26,6 @@ export default function useSearch<Row = Pojo>({
     } else {
       setFilteredData(data);
     }
-  }, [searchValue, data]);
+  }, [searchValue, data, fuse]);
   return { searchValue, setSearchValue, filteredData };
 }

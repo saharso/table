@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { getGroupBy } from "../utils";
-import { Column, GroupBy, Pojo } from "../types";
+import { Column, GroupBy, Pojo } from "../../../types";
 
 interface GroupByHook<Row> {
   groupBy: keyof Row;

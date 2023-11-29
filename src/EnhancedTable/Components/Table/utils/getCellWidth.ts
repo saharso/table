@@ -1,4 +1,4 @@
-import { Column } from "../types";
+import { Column } from "../../../types";
 
 export default function getCellWidth(column: Column) {
   return column.width

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { columns } from "../const";
-import { Pojo } from "../Components/Table/types";
+import { columns } from "../../const";
+import { Pojo } from "../types";
 import { setToggle } from "../Components/Table/utils";
 
 export default function useFilterColumns<Row = Pojo>({

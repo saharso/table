@@ -14,7 +14,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import React from "react";
 import styles from "./ToolBar.module.scss";
 import { debounce } from "lodash";
-import { Column, Pojo } from "../Table/types";
+import { Column, Pojo } from "../../types";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 interface ColumnFilterDropDownProps<Row = Pojo> {
   columns: Column<Row>[];

@@ -4,7 +4,7 @@ import {
   OptionsColumn,
   Pojo,
   RowUpdatePayload,
-} from "../types";
+} from "../../../types";
 import { v4 as uuId } from "uuid";
 import { useCallback, useState } from "react";
 import { getCellWidth } from "../utils";

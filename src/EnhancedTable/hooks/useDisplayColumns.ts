@@ -1,4 +1,4 @@
-import { Column, Pojo } from "../Components/Table/types";
+import { Column, Pojo } from "../types";
 import { useMemo } from "react";
 
 interface DisplayColumnsProps<Row = Pojo> {

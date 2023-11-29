@@ -1,4 +1,4 @@
-export default interface RowData {
+export default interface Mock1Model {
   id: string;
   available: boolean;
   email: string;
@@ -7,5 +7,5 @@ export default interface RowData {
   options: string;
   phone: string;
   number: number;
-  items: RowData[];
+  items: Mock1Model[];
 }

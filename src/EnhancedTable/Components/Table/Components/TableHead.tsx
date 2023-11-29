@@ -1,4 +1,4 @@
-import { Column, Pojo } from "../types";
+import { Column, Pojo } from "../../../types";
 import styles from "../Table.module.scss";
 import classNames from "classnames";
 import { getCellWidth } from "../utils";

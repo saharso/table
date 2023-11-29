@@ -1,4 +1,4 @@
-import { Column, GroupBy, Pojo } from "../types";
+import { Column, GroupBy, Pojo } from "../../../types";
 import classNames from "classnames";
 import styles from "../Table.module.scss";
 import { IconButton } from "@mui/material";

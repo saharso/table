@@ -1,9 +1,9 @@
 import React, { useCallback } from "react";
-import { Pojo, RowUpdatePayload } from "../Components/Table/types";
+import { Pojo, RowUpdatePayload } from "../types";
 import { produce } from "immer";
 
 interface CellUpdateProps<Row = Pojo> {
-  identifier: string;
+  identifier: keyof Row;
   setUpdate: React.Dispatch<React.SetStateAction<RowUpdatePayload>>;
   setData: React.Dispatch<React.SetStateAction<Row[]>>;
 }
@@ -18,7 +18,9 @@ export default function useCellUpdate<Row>({
       produce(prevData, (draftData) => {
         const rowIndex = draftData.findIndex((rowData) => {
           const row = rowData as Row;
-          return row[identifier as keyof Row] === update.row[identifier];
+          return (
+            row[identifier as keyof Row] === update.row[identifier as string]
+          );
         });
         if (rowIndex !== -1) {
           const row = draftData[rowIndex] as Row;

@@ -1,4 +1,4 @@
-import { GroupBy, Pojo } from "../types";
+import { GroupBy, Pojo } from "../../../types";
 
 export default function getGroupBy<Row = Pojo>(
   data: Row[],

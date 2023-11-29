@@ -1,7 +1,7 @@
-import { Column } from "../Components/Table/types";
-import RowData from "../type/RowData";
+import { Column } from "../EnhancedTable/types";
+import Mock1Model from "../type/Mock1Model";
 
-const columns: Column<RowData>[] = [
+const mock1columns: Column<Mock1Model>[] = [
   {
     id: "email",
     ordinalNo: 20,
@@ -57,4 +57,4 @@ const columns: Column<RowData>[] = [
   },
 ];
 
-export default columns;
+export default mock1columns;

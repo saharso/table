@@ -1,4 +1,9 @@
-import { CellEditPayload, Column, Pojo, RowUpdatePayload } from "../types";
+import {
+  CellEditPayload,
+  Column,
+  Pojo,
+  RowUpdatePayload,
+} from "../../../types";
 import React from "react";
 import styles from "../Table.module.scss";
 import { TableCell } from "./index";

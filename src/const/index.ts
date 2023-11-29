@@ -1,1 +1,1 @@
-export { default as columns } from "./columns";
+export { default as columns } from "./mock1columns";

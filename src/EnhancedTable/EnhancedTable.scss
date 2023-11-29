@@ -1,12 +1,12 @@
-body {
-  font-family: "Roboto", sans-serif;
-}
+// global styles
 * {
     box-sizing: border-box;
 }
-.App {
+.EnhancedTable {
   padding: 16px;
+  font-family: "Roboto", sans-serif;
 }
+
 .layout-align-y {
   display: flex;
   align-items: center;

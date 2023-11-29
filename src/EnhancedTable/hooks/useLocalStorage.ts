@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Pojo, RowUpdatePayload } from "../Components/Table/types";
+import { Pojo, RowUpdatePayload } from "../types";
 const storageName = "storageEntries";
 
 export default function useLocalStorage<Row = Pojo>({
@@ -9,7 +9,7 @@ export default function useLocalStorage<Row = Pojo>({
 }: {
   setDataByLocalStorage: React.Dispatch<React.SetStateAction<Row[]>>;
   update: RowUpdatePayload;
-  identifier: string;
+  identifier: keyof Row;
 }) {
   const [storageEntries, setStorageEntries] = React.useState<
     Record<string, Record<string, unknown>>
