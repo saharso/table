@@ -20,6 +20,7 @@ interface TableProps<Row = Pojo> {
   onCellUpdate?: ({ row, columnId, value, index }: RowUpdatePayload) => void;
   groupBy?: keyof Row;
   selectedColumns?: Set<string>;
+  identifier: keyof Row;
 }
 export default function Table<Row = Pojo>({
   rows,
@@ -27,6 +28,7 @@ export default function Table<Row = Pojo>({
   onCellUpdate,
   groupBy,
   selectedColumns,
+  identifier,
 }: TableProps<Row>) {
   const [editable, setEditable] = useState<CellEditPayload>();
   const [collapsedRows, setCollapsedRows] = useState<Set<string>>(new Set());
@@ -35,11 +37,12 @@ export default function Table<Row = Pojo>({
     columns,
     selectedColumns,
   });
-  const { data, isGroupBy, groupedColumn, columnsWithoutGroupBy } = useGroupBy({
-    groupBy,
-    rows,
-    columns: displayColumns,
-  });
+  const { data, isGroupBy, groupedColumn, columnsWithoutGroupBy } =
+    useGroupBy<Row>({
+      groupBy,
+      rows,
+      columns: displayColumns,
+    });
 
   const onToggleRowCollapse = (row: GroupBy) => {
     setCollapsedRows((prev) => {
@@ -47,6 +50,8 @@ export default function Table<Row = Pojo>({
       return setToggle(prev, id);
     });
   };
+
+  console.log(editable);
 
   if (!data || data.length === 0) return <div>No rows to show</div>;
   return (
@@ -56,12 +61,12 @@ export default function Table<Row = Pojo>({
         role="rowgroup"
         data={data as never[]}
         useWindowScroll
-        itemContent={(index, row: GroupBy | Pojo) => {
+        itemContent={(index, row: GroupBy | Row) => {
           const rowOpen =
             isGroupBy(row) && !collapsedRows.has(row.groupValue as string);
           return (
             <>
-              {groupBy ? (
+              {isGroupBy(row) ? (
                 <>
                   <GroupByHeader<Row>
                     row={row as GroupBy}
@@ -72,13 +77,13 @@ export default function Table<Row = Pojo>({
                   />
                   {rowOpen && (
                     <div className={styles.TableGroupedRowsDrawer}>
-                      {row.items.map((row, index) => {
+                      {row.items.map((row) => {
                         return (
                           <TableRow
                             key={uuId()}
                             columns={columnsWithoutGroupBy as Column[]}
                             row={row}
-                            index={index}
+                            rowId={row[identifier as string] as string}
                             onCellUpdate={onCellUpdate as any}
                             setEditable={setEditable}
                             editable={editable}
@@ -93,7 +98,7 @@ export default function Table<Row = Pojo>({
                   key={uuId()}
                   columns={displayColumns as Column[]}
                   row={row as Pojo}
-                  index={index}
+                  rowId={row[identifier] as string}
                   onCellUpdate={onCellUpdate as any}
                   setEditable={setEditable}
                   editable={editable}

@@ -65,6 +65,7 @@ function EnhancedTable<Row = Pojo>({
         onCellUpdate={onCellUpdate}
         groupBy={groupBy}
         selectedColumns={selectedColumns}
+        identifier={identifier}
       />
     </div>
   );

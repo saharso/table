@@ -158,8 +158,8 @@ interface TableCellProps<Row = Pojo> {
   row: Row;
   column: Column<Row>;
   onCellUpdate: ({ row, columnId, value }: RowUpdatePayload<Row>) => void;
-  index?: number;
-  onEdit: ({ columnId, index }: CellEditPayload) => void;
+  rowId: string;
+  onEdit: ({ columnId, rowId }: CellEditPayload) => void;
   editable: CellEditPayload;
 }
 
@@ -167,7 +167,7 @@ export default function TableCell<Row = Pojo>({
   row,
   column,
   onCellUpdate,
-  index,
+  rowId,
   onEdit,
   editable,
 }: TableCellProps<Row>) {
@@ -179,7 +179,7 @@ export default function TableCell<Row = Pojo>({
   );
   const onCellEdit = (editMode: boolean) => {
     if (editMode) {
-      onEdit({ columnId: column.id as string, index: index });
+      onEdit({ columnId: column.id as string, rowId });
     } else {
       onEdit(null);
     }
@@ -204,7 +204,7 @@ export default function TableCell<Row = Pojo>({
           data={row[column.id] as string}
           onEdit={onCellEdit}
           editable={editable}
-          cellId={{ columnId: column.id as string, index: index }}
+          cellId={{ columnId: column.id as string, rowId }}
           column={column as Column}
         />
       )}
@@ -223,7 +223,7 @@ export default function TableCell<Row = Pojo>({
           type="number"
           onEdit={onCellEdit}
           editable={editable}
-          cellId={{ columnId: column.id as string, index: index }}
+          cellId={{ columnId: column.id as string, rowId }}
           column={column as Column}
         />
       )}

@@ -12,7 +12,7 @@ interface TableRowProps<Row = Pojo> {
   columns: Column<Row>[];
   row: Row;
   onCellUpdate?: ({ row, columnId, value, index }: RowUpdatePayload) => void;
-  index?: number;
+  rowId?: string;
   setEditable: React.Dispatch<CellEditPayload>;
   editable: CellEditPayload;
 }
@@ -20,7 +20,7 @@ const TableRow = React.memo(
   ({
     columns,
     row,
-    index,
+    rowId,
     onCellUpdate,
     setEditable,
     editable,
@@ -34,7 +34,7 @@ const TableRow = React.memo(
               row={row}
               column={column}
               onCellUpdate={onCellUpdate}
-              index={index}
+              rowId={rowId}
               onEdit={setEditable}
               editable={editable}
             />
