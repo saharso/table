@@ -14,11 +14,21 @@ export default function useDisplayColumns<Row = Pojo>({
   const displayColumns = useMemo(
     () =>
       columns
-        .sort((a, b) => a.ordinalNo - b.ordinalNo)
-        .filter(({ id }) => {
-          if (id === groupBy) return true;
-          return selectedColumns.has(id as string);
-        }),
+        .sort((a, b) => {
+          return a.ordinalNo - b.ordinalNo;
+        })
+        .reduce((result, column) => {
+          if (column.id === groupBy) {
+            // group-by column should be the first column
+            result.unshift(column);
+          } else {
+            // filter by selected columns, group-by is always displayed
+            if (selectedColumns.has(column.id as string)) {
+              result.push(column);
+            }
+          }
+          return result;
+        }, [] as Column<Row>[]),
     [columns, groupBy, selectedColumns],
   );
 

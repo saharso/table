@@ -161,6 +161,7 @@ interface TableCellProps<Row = Pojo> {
   rowId: string;
   onEdit: ({ columnId, rowId }: CellEditPayload) => void;
   editable: CellEditPayload;
+  groupedColumn: Column<Row>;
 }
 
 export default function TableCell<Row = Pojo>({
@@ -170,6 +171,7 @@ export default function TableCell<Row = Pojo>({
   rowId,
   onEdit,
   editable,
+  groupedColumn,
 }: TableCellProps<Row>) {
   const onUpdate = useCallback(
     (value: string | boolean | number) => {
@@ -191,41 +193,47 @@ export default function TableCell<Row = Pojo>({
       style={getCellWidth(column as Column)}
       role={"cell"}
     >
-      {column.type === "options" && (
-        <SelectCell
-          data={row[column.id] as string}
-          options={(column as OptionsColumn).options}
-          onSaveCell={onUpdate}
-        />
-      )}
-      {column.type === "string" && (
-        <EditableDataCell
-          onSaveCell={onUpdate}
-          data={row[column.id] as string}
-          onEdit={onCellEdit}
-          editable={editable}
-          cellId={{ columnId: column.id as string, rowId }}
-          column={column as Column}
-        />
-      )}
-      {column.type === "boolean" && (
-        <BooleanCell
-          data={row[column.id] as boolean}
-          onSaveCell={(value) => {
-            onUpdate(value);
-          }}
-        />
-      )}
-      {column.type === "number" && (
-        <EditableDataCell
-          onSaveCell={onUpdate}
-          data={row[column.id] as string}
-          type="number"
-          onEdit={onCellEdit}
-          editable={editable}
-          cellId={{ columnId: column.id as string, rowId }}
-          column={column as Column}
-        />
+      {column.id === groupedColumn?.id ? (
+        <div />
+      ) : (
+        <>
+          {column.type === "options" && (
+            <SelectCell
+              data={row[column.id] as string}
+              options={(column as OptionsColumn).options}
+              onSaveCell={onUpdate}
+            />
+          )}
+          {column.type === "string" && (
+            <EditableDataCell
+              onSaveCell={onUpdate}
+              data={row[column.id] as string}
+              onEdit={onCellEdit}
+              editable={editable}
+              cellId={{ columnId: column.id as string, rowId }}
+              column={column as Column}
+            />
+          )}
+          {column.type === "boolean" && (
+            <BooleanCell
+              data={row[column.id] as boolean}
+              onSaveCell={(value) => {
+                onUpdate(value);
+              }}
+            />
+          )}
+          {column.type === "number" && (
+            <EditableDataCell
+              onSaveCell={onUpdate}
+              data={row[column.id] as string}
+              type="number"
+              onEdit={onCellEdit}
+              editable={editable}
+              cellId={{ columnId: column.id as string, rowId }}
+              column={column as Column}
+            />
+          )}
+        </>
       )}
     </div>
   );

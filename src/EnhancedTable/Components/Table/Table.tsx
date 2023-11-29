@@ -37,12 +37,11 @@ export default function Table<Row = Pojo>({
     columns,
     selectedColumns,
   });
-  const { data, isGroupBy, groupedColumn, columnsWithoutGroupBy } =
-    useGroupBy<Row>({
-      groupBy,
-      rows,
-      columns: displayColumns,
-    });
+  const { data, isGroupBy, groupedColumn } = useGroupBy<Row>({
+    groupBy,
+    rows,
+    columns: displayColumns,
+  });
 
   const onToggleRowCollapse = (row: GroupBy) => {
     setCollapsedRows((prev) => {
@@ -51,12 +50,10 @@ export default function Table<Row = Pojo>({
     });
   };
 
-  console.log(editable);
-
   if (!data || data.length === 0) return <div>No rows to show</div>;
   return (
     <div className={styles.Table} role={"table"}>
-      <TableHead columns={columnsWithoutGroupBy} />
+      <TableHead columns={displayColumns} />
       <Virtuoso
         role="rowgroup"
         data={data as never[]}
@@ -74,6 +71,7 @@ export default function Table<Row = Pojo>({
                     onCollapseToggle={onToggleRowCollapse}
                     groupedColumn={groupedColumn as Column}
                     items={row.items as Row[]}
+                    columns={displayColumns}
                   />
                   {rowOpen && (
                     <div className={styles.TableGroupedRowsDrawer}>
@@ -81,12 +79,13 @@ export default function Table<Row = Pojo>({
                         return (
                           <TableRow
                             key={uuId()}
-                            columns={columnsWithoutGroupBy as Column[]}
+                            columns={displayColumns as Column[]}
                             row={row}
                             rowId={row[identifier as string] as string}
                             onCellUpdate={onCellUpdate as any}
                             setEditable={setEditable}
                             editable={editable}
+                            groupedColumn={groupedColumn as Column}
                           />
                         );
                       })}

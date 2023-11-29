@@ -15,6 +15,7 @@ interface TableRowProps<Row = Pojo> {
   rowId?: string;
   setEditable: React.Dispatch<CellEditPayload>;
   editable: CellEditPayload;
+  groupedColumn?: Column<Row>;
 }
 const TableRow = React.memo(
   ({
@@ -24,6 +25,7 @@ const TableRow = React.memo(
     onCellUpdate,
     setEditable,
     editable,
+    groupedColumn,
   }: TableRowProps) => {
     return (
       <div className={styles.TableRow} role={"row"}>
@@ -37,6 +39,7 @@ const TableRow = React.memo(
               rowId={rowId}
               onEdit={setEditable}
               editable={editable}
+              groupedColumn={groupedColumn}
             />
           );
         })}
