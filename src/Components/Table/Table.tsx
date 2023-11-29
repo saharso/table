@@ -8,9 +8,11 @@ import {
 import styles from "./Table.module.scss";
 import { Virtuoso } from "react-virtuoso";
 import { GroupByHeader, TableHead, TableRow } from "./Components";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import useGroupBy from "./hooks/useGroupBy";
 import { v4 as uuId } from "uuid";
+import { useDisplayColumns } from "../../hooks";
+import { setToggle } from "./utils";
 
 interface TableProps<Row = Pojo> {
   rows: Row[];
@@ -19,7 +21,6 @@ interface TableProps<Row = Pojo> {
   groupBy?: keyof Row;
   selectedColumns?: Set<string>;
 }
-
 export default function Table<Row = Pojo>({
   rows,
   columns,
@@ -27,32 +28,23 @@ export default function Table<Row = Pojo>({
   groupBy,
   selectedColumns,
 }: TableProps<Row>) {
-  const displayColumns = useMemo(
-    () =>
-      columns
-        .sort((a, b) => a.ordinalNo - b.ordinalNo)
-        .filter(({ id }) => {
-          if (id === groupBy) return true;
-          return selectedColumns.has(id as string);
-        }),
-    [columns, groupBy, selectedColumns],
-  );
   const [editable, setEditable] = useState<CellEditPayload>();
+  const [collapsedRows, setCollapsedRows] = useState<Set<string>>(new Set());
+  const { displayColumns } = useDisplayColumns<Row>({
+    groupBy,
+    columns,
+    selectedColumns,
+  });
   const { data, isGroupBy, groupedColumn, columnsWithoutGroupBy } = useGroupBy({
     groupBy,
     rows,
     columns: displayColumns,
   });
-  const [collapsedRows, setCollapsedRows] = React.useState<Set<string>>(
-    new Set(),
-  );
 
   const onToggleRowCollapse = (row: GroupBy) => {
     setCollapsedRows((prev) => {
-      const newPrev = new Set(prev);
       const id = row.groupValue as string;
-      newPrev.has(id) ? newPrev.delete(id) : newPrev.add(id);
-      return newPrev;
+      return setToggle(prev, id);
     });
   };
   return (
@@ -77,7 +69,7 @@ export default function Table<Row = Pojo>({
                     items={row.items as Row[]}
                   />
                   {rowOpen && (
-                    <div className={styles.TableDrawer}>
+                    <div className={styles.TableGroupedRowsDrawer}>
                       {row.items.map((row, index) => {
                         return (
                           <TableRow
