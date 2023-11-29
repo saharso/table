@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { columns } from "../const";
 import { Pojo } from "../Components/Table/types";
+import { setToggle } from "../Components/Table/utils";
 
 export default function useFilterColumns<Row = Pojo>({
   groupBy,
@@ -22,13 +23,7 @@ export default function useFilterColumns<Row = Pojo>({
 
   const handleColumnSelection = (columnId: string) => {
     setSelectedColumns((prev) => {
-      const clone = new Set(prev);
-      if (clone.has(columnId)) {
-        clone.delete(columnId);
-      } else {
-        clone.add(columnId);
-      }
-      return clone;
+      return setToggle(prev, columnId);
     });
   };
 
