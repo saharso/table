@@ -3,7 +3,7 @@ import { SelectOption } from "./index";
 
 interface DefaultColumn<Row = Pojo> {
   id: keyof Row;
-  ordinalNo: number;
+  ordinalNo?: number;
   title: string;
   type: "string" | "number" | "boolean" | "options";
   width?: number;
