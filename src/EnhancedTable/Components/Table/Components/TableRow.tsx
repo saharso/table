@@ -28,7 +28,11 @@ const TableRow = React.memo(
     groupedColumn,
   }: TableRowProps) => {
     return (
-      <div className={styles.TableRow} role={"row"}>
+      <div
+        className={styles.TableRow}
+        role={"row"}
+        data-testid={`table-row-${rowId}`}
+      >
         {columns.map((column) => {
           return (
             <TableCell

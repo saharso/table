@@ -28,6 +28,7 @@ export default function GroupByHeader<Row = Pojo>({
     <div
       className={classNames(styles.TableRow, styles.GroupByHeader)}
       role="rowheader"
+      data-testid={`table-group-row-${row.groupValue}`}
     >
       {columns.map((column) => {
         return (
