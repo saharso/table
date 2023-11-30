@@ -27,6 +27,7 @@ function EnhancedTable<Row = Pojo>({
   const [update, setUpdate] = useState<RowUpdatePayload>();
   const { selectedColumns, handleColumnSelection } = useFilterColumns<Row>({
     groupBy,
+    columns,
   });
   const { displayColumns } = useDisplayColumns<Row>({
     groupBy,
