@@ -62,7 +62,8 @@ export default function GroupByHeader<Row = Pojo>({
                 )}
                 {column.type === "boolean" && (
                   <div className={styles.GroupByNumber}>
-                    {RowSummary.getBooleanSummary<Row>(items, column)}
+                    {RowSummary.getBooleanSummary<Row>(items, column)} /{" "}
+                    {items.length}
                   </div>
                 )}
                 {column.type === "options" && (
