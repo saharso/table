@@ -8,7 +8,7 @@ import {
 } from "../../../types";
 import { v4 as uuId } from "uuid";
 import { useCallback, useState } from "react";
-import { getCellWidth } from "../utils";
+import { getCellWidth, parsePrimitive } from "../utils";
 import styles from "../Table.module.scss";
 import {
   Checkbox,
@@ -102,7 +102,7 @@ function EditableDataCell({
             onEdit(true);
           }}
         >
-          {data}
+          {parsePrimitive(data)}
         </div>
       )}
       {isEditable && (
