@@ -58,3 +58,13 @@ $row-height: 50px;
     word-break: break-word;
   }
 }
+.OptionLabel, .SelectCell {
+  position: relative;
+  .Color {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+  }
+}

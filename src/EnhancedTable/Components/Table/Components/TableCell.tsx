@@ -4,6 +4,7 @@ import {
   OptionsColumn,
   Pojo,
   RowUpdatePayload,
+  SelectOption,
 } from "../../../types";
 import { v4 as uuId } from "uuid";
 import { useCallback, useState } from "react";
@@ -27,32 +28,47 @@ function SelectCell({
   onSaveCell,
 }: {
   data: string;
-  options: string[];
+  options: SelectOption[];
   onSaveCell: (value: string) => void;
 }) {
+  const selected = options.find(({ value }) => value === data);
   return (
-    <Select
-      sx={{
-        width: "100%",
-        height: rowHeight,
-        borderRadius: 0,
-        border: 0,
-        "& .MuiOutlinedInput-notchedOutline": {
+    <div className={styles.SelectCell}>
+      <div
+        className={styles.Color}
+        style={{ backgroundColor: selected.color }}
+      ></div>
+      <Select
+        sx={{
+          width: "100%",
+          height: rowHeight,
+          borderRadius: 0,
           border: 0,
-        },
-      }}
-      value={data}
-      placeholder="Select"
-      onChange={(e) => {
-        onSaveCell(e.target.value);
-      }}
-    >
-      {options.map((option) => (
-        <MenuItem key={uuId()} value={option}>
-          {option}
-        </MenuItem>
-      ))}
-    </Select>
+          "& .MuiOutlinedInput-notchedOutline": {
+            border: 0,
+          },
+        }}
+        value={data}
+        placeholder="Select"
+        onChange={(e) => {
+          onSaveCell(e.target.value);
+        }}
+      >
+        {options.map((option) => (
+          <MenuItem
+            key={uuId()}
+            value={option.value}
+            className={styles.OptionLabel}
+          >
+            <div
+              className={styles.Color}
+              style={{ backgroundColor: option.color }}
+            ></div>
+            <span>{option.label}</span>
+          </MenuItem>
+        ))}
+      </Select>
+    </div>
   );
 }
 function EditableDataCell({
