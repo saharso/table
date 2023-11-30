@@ -29,7 +29,7 @@ const mock1columns: Column<Mock1Model>[] = [
     ordinalNo: 4,
     title: "Available",
     type: "boolean",
-    width: 90,
+    width: 140,
   },
   {
     id: "options",

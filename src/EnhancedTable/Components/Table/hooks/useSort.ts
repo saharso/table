@@ -9,6 +9,8 @@ export default function useSort<Row>({
   rows: Row[];
   setData: React.Dispatch<React.SetStateAction<Row[]>>;
 }) {
+  const [sortState, setSortState] = React.useState<SortState>(null);
+
   const handleSortingState = useCallback(
     (sortingState: SortState) => {
       const sorted =
@@ -27,9 +29,10 @@ export default function useSort<Row>({
             )
           : rows;
       setData(sorted);
+      setSortState(sortingState);
     },
     [rows, setData],
   );
 
-  return { handleSortingState };
+  return { handleSortingState, sortState };
 }

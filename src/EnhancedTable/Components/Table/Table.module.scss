@@ -79,3 +79,23 @@ $row-height: 50px;
       border-radius: 50%;
   }
 }
+
+.TableHeadCell {
+  position: relative;
+  padding-inline-end: 34px;
+  .SortButton {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+  &.unsorted {
+    .SortButton {
+      visibility: hidden;
+    }
+    &:hover {
+        .SortButton {
+            visibility: visible;
+        }
+    }
+  }
+}

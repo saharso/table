@@ -4,6 +4,7 @@ import {
   GroupBy,
   Pojo,
   RowUpdatePayload,
+  SortState,
 } from "../../types";
 import styles from "./Table.module.scss";
 import { Virtuoso } from "react-virtuoso";
@@ -11,7 +12,6 @@ import { GroupByHeader, TableHead, TableRow } from "./Components";
 import React, { useState } from "react";
 import useGroupBy from "./hooks/useGroupBy";
 import { v4 as uuId } from "uuid";
-import { useDisplayColumns } from "../../hooks";
 import { setToggle } from "./utils";
 
 interface TableProps<Row = Pojo> {
@@ -19,16 +19,18 @@ interface TableProps<Row = Pojo> {
   columns: Column<Row>[];
   onCellUpdate?: ({ row, columnId, value, index }: RowUpdatePayload) => void;
   groupBy?: keyof Row;
-  selectedColumns?: Set<string>;
+  onSort: (sortState: SortState) => void;
   identifier: keyof Row;
+  sortState: SortState;
 }
 export default function Table<Row = Pojo>({
   rows,
   columns,
   onCellUpdate,
   groupBy,
-  selectedColumns,
   identifier,
+  onSort,
+  sortState,
 }: TableProps<Row>) {
   const [editable, setEditable] = useState<CellEditPayload>();
   const [collapsedRows, setCollapsedRows] = useState<Set<string>>(new Set());
@@ -48,7 +50,7 @@ export default function Table<Row = Pojo>({
   if (!data || data.length === 0) return <div>No rows to show</div>;
   return (
     <div className={styles.Table} role={"table"}>
-      <TableHead columns={columns} />
+      <TableHead columns={columns} onSort={onSort} sortState={sortState} />
       <Virtuoso
         role="rowgroup"
         data={data as never[]}

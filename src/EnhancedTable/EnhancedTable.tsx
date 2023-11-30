@@ -9,6 +9,7 @@ import {
   useLocalStorage,
   useSearch,
 } from "./hooks";
+import { useSort } from "./Components/Table/hooks";
 
 interface EnhancedTableProps<Row = Pojo> {
   data: Row[];
@@ -51,6 +52,11 @@ function EnhancedTable<Row = Pojo>({
     identifier,
   });
 
+  const { handleSortingState, sortState } = useSort<Row>({
+    rows: filteredData,
+    setData: setRows,
+  });
+
   useEffect(() => {
     setRows(data);
   }, [data]);
@@ -69,8 +75,9 @@ function EnhancedTable<Row = Pojo>({
         columns={displayColumns}
         onCellUpdate={onCellUpdate}
         groupBy={groupBy}
-        selectedColumns={selectedColumns}
+        onSort={handleSortingState}
         identifier={identifier}
+        sortState={sortState}
       />
     </div>
   );
