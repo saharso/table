@@ -15,14 +15,14 @@ const mock1columns: Column<Mock1Model>[] = [
     ordinalNo: 2,
     title: "First Name",
     type: "string",
-    width: 250,
+    width: 200,
   },
   {
     id: "lastName",
     ordinalNo: 3,
     title: "Last Name",
     type: "string",
-    width: 250,
+    width: 200,
   },
   {
     id: "available",
