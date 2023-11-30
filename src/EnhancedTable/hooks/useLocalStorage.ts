@@ -20,7 +20,6 @@ export default function useLocalStorage<Row = Pojo>({
   useEffect(() => {
     if (Object.keys(storageEntries).length !== 0) {
       const previousEntries = JSON.parse(localStorage.getItem(storageName));
-      console.log(previousEntries);
       localStorage.setItem(
         storageName,
         JSON.stringify({ ...previousEntries, ...storageEntries }),
