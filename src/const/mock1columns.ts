@@ -55,7 +55,7 @@ const mock1columns: Column<Mock1Model>[] = [
     ordinalNo: 5,
     title: "Number",
     type: "number",
-    width: 200,
+    width: 250,
     overflow: "break-word",
     minWidth: 100,
   },

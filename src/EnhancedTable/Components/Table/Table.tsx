@@ -55,7 +55,7 @@ export default function Table<Row = Pojo>({
         role="rowgroup"
         data={data as never[]}
         useWindowScroll
-        itemContent={(index, row: GroupBy | Row) => {
+        itemContent={(_, row: GroupBy | Row) => {
           const rowOpen =
             isGroupBy(row) && !collapsedRows.has(row.groupValue as string);
           return (
