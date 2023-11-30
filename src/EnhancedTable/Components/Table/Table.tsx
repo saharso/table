@@ -32,15 +32,10 @@ export default function Table<Row = Pojo>({
 }: TableProps<Row>) {
   const [editable, setEditable] = useState<CellEditPayload>();
   const [collapsedRows, setCollapsedRows] = useState<Set<string>>(new Set());
-  const { displayColumns } = useDisplayColumns<Row>({
-    groupBy,
-    columns,
-    selectedColumns,
-  });
   const { data, isGroupBy, groupedColumn } = useGroupBy<Row>({
     groupBy,
     rows,
-    columns: displayColumns,
+    columns,
   });
 
   const onToggleRowCollapse = (row: GroupBy) => {
@@ -53,7 +48,7 @@ export default function Table<Row = Pojo>({
   if (!data || data.length === 0) return <div>No rows to show</div>;
   return (
     <div className={styles.Table} role={"table"}>
-      <TableHead columns={displayColumns} />
+      <TableHead columns={columns} />
       <Virtuoso
         role="rowgroup"
         data={data as never[]}
@@ -71,7 +66,7 @@ export default function Table<Row = Pojo>({
                     onCollapseToggle={onToggleRowCollapse}
                     groupedColumn={groupedColumn as Column}
                     items={row.items as Row[]}
-                    columns={displayColumns}
+                    columns={columns}
                   />
                   {rowOpen && (
                     <div className={styles.TableGroupedRowsDrawer}>
@@ -79,7 +74,7 @@ export default function Table<Row = Pojo>({
                         return (
                           <TableRow
                             key={uuId()}
-                            columns={displayColumns as Column[]}
+                            columns={columns as Column[]}
                             row={row}
                             rowId={row[identifier as string] as string}
                             onCellUpdate={onCellUpdate as any}
@@ -95,7 +90,7 @@ export default function Table<Row = Pojo>({
               ) : (
                 <TableRow
                   key={uuId()}
-                  columns={displayColumns as Column[]}
+                  columns={columns as Column[]}
                   row={row as Pojo}
                   rowId={row[identifier] as string}
                   onCellUpdate={onCellUpdate as any}

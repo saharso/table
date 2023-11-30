@@ -4,6 +4,7 @@ import { Table, ToolBar } from "./Components";
 import { Column, Pojo, RowUpdatePayload } from "./types";
 import {
   useCellUpdate,
+  useDisplayColumns,
   useFilterColumns,
   useLocalStorage,
   useSearch,
@@ -23,6 +24,14 @@ function EnhancedTable<Row = Pojo>({
 }: EnhancedTableProps<Row>) {
   const [rows, setRows] = useState<Row[]>();
   const [update, setUpdate] = useState<RowUpdatePayload>();
+  const { selectedColumns, handleColumnSelection } = useFilterColumns<Row>({
+    groupBy,
+  });
+  const { displayColumns } = useDisplayColumns<Row>({
+    groupBy,
+    columns,
+    selectedColumns,
+  });
 
   useLocalStorage<Row>({
     setDataByLocalStorage: setRows,
@@ -33,17 +42,13 @@ function EnhancedTable<Row = Pojo>({
 
   const { setSearchValue, filteredData } = useSearch<Row>({
     data: rows || [],
-    keys: columns.map((column) => column.id),
+    keys: displayColumns.map((column) => column.id),
   });
 
   const { onCellUpdate } = useCellUpdate<Row>({
     setUpdate,
     setData: setRows,
     identifier,
-  });
-
-  const { selectedColumns, handleColumnSelection } = useFilterColumns<Row>({
-    groupBy,
   });
 
   useEffect(() => {
@@ -54,14 +59,14 @@ function EnhancedTable<Row = Pojo>({
     <div className="EnhancedTable">
       <ToolBar<Row>
         onSearch={setSearchValue}
-        columns={columns}
+        originalColumns={columns}
         groupBy={groupBy}
         selectedColumns={selectedColumns}
         onFilterColumnChange={handleColumnSelection}
       />
       <Table<Row>
         rows={filteredData}
-        columns={columns}
+        columns={displayColumns}
         onCellUpdate={onCellUpdate}
         groupBy={groupBy}
         selectedColumns={selectedColumns}

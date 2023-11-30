@@ -98,7 +98,7 @@ function ColumnFilterDropDown<Row = Pojo>({
 }
 interface ToolBarProps<Row = Pojo> {
   onSearch: (value: string) => void;
-  columns: Column<Row>[];
+  originalColumns: Column<Row>[];
   selectedColumns: Set<string>;
   onFilterColumnChange: (columnId: string) => void;
   groupBy?: keyof Row;
@@ -106,7 +106,7 @@ interface ToolBarProps<Row = Pojo> {
 
 export default function ToolBar<Row = Pojo>({
   onSearch,
-  columns,
+  originalColumns,
   selectedColumns,
   onFilterColumnChange,
   groupBy,
@@ -119,7 +119,7 @@ export default function ToolBar<Row = Pojo>({
     debouncedInputChange(e.target.value);
     setDisplayValue(e.target.value);
   };
-  const nonGroupedColumns = columns.filter(({ id }) => id !== groupBy);
+  const nonGroupedColumns = originalColumns.filter(({ id }) => id !== groupBy);
   return (
     <div className={styles.ToolBar}>
       <div className={"layout-align-y gap-2"}>
