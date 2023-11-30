@@ -68,3 +68,14 @@ $row-height: 50px;
     height: 100%;
   }
 }
+.OptionSummary {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  .Color {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+  }
+}

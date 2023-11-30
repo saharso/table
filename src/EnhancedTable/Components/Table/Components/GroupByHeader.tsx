@@ -1,4 +1,10 @@
-import { Column, GroupBy, Pojo } from "../../../types";
+import {
+  Column,
+  GroupBy,
+  OptionsColumn,
+  Pojo,
+  SelectOption,
+} from "../../../types";
 import classNames from "classnames";
 import styles from "../Table.module.scss";
 import { IconButton } from "@mui/material";
@@ -6,7 +12,30 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import React from "react";
 import { getCellWidth } from "../utils";
+type OptionColorPair = Record<
+  string,
+  { amount: number; color: string; value: string }
+>;
+function getOptions<Row = Pojo>(items: Row[], column: Column<Row>) {
+  const optionColorPair = items.reduce((acc, curr) => {
+    const option = (column as OptionsColumn).options.find(
+      ({ value }) => curr[column.id] === value,
+    );
+    if (!acc[option.value]) {
+      acc[option.value] = {
+        amount: 1,
+        color: option.color,
+        value: option.value,
+      };
+    } else {
+      acc[option.value]["amount"] += 1;
+    }
 
+    return acc;
+  }, {} as OptionColorPair);
+
+  return Object.values(optionColorPair);
+}
 interface GroupByRowProps<Row = Pojo> {
   row: GroupBy;
   rowOpen: boolean;
@@ -16,22 +45,6 @@ interface GroupByRowProps<Row = Pojo> {
   columns: Column<Row>[];
 }
 
-function getOptions<Row = Pojo>(items: Row[], column: Column<Row>) {
-  return items.reduce(
-    (acc, curr) => {
-      const option = curr[column.id] as string;
-
-      if (!acc[option]) {
-        acc[option] = 1;
-      } else {
-        (acc[option] as number) += 1;
-      }
-
-      return acc;
-    },
-    {} as Record<string, number>,
-  );
-}
 export default function GroupByHeader<Row = Pojo>({
   row,
   rowOpen,
@@ -46,11 +59,6 @@ export default function GroupByHeader<Row = Pojo>({
       role="rowheader"
     >
       {columns.map((column) => {
-        if (column.type === "options") {
-          const aggregatedOptions = getOptions<Row>(items, column);
-
-          console.log(aggregatedOptions);
-        }
         return (
           <div
             key={column.id as string}
@@ -90,7 +98,24 @@ export default function GroupByHeader<Row = Pojo>({
                   </div>
                 )}
                 {column.type === "options" && (
-                  <div className={styles.GroupByNumber}></div>
+                  <div
+                    className={classNames(
+                      styles.GroupByNumber,
+                      "layout-align-y flex-wrap gap-2",
+                    )}
+                  >
+                    {getOptions<Row>(items, column).map((item) => {
+                      return (
+                        <div key={item.value} className={styles.OptionSummary}>
+                          <span
+                            className={styles.Color}
+                            style={{ backgroundColor: item.color }}
+                          />
+                          <span>{item.amount}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
                 )}
               </div>
             )}
