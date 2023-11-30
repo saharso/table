@@ -1,4 +1,5 @@
 import Pojo from "./Pojo";
+import { SelectOption } from "./index";
 
 interface DefaultColumn<Row = Pojo> {
   id: keyof Row;
@@ -12,7 +13,7 @@ interface DefaultColumn<Row = Pojo> {
 
 export interface OptionsColumn<Row = Pojo> extends DefaultColumn<Row> {
   type: "options";
-  options: string[];
+  options: SelectOption[];
 }
 
 type Column<Row = Pojo> = DefaultColumn<Row> | OptionsColumn<Row>;

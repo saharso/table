@@ -37,7 +37,11 @@ const mock1columns: Column<Mock1Model>[] = [
     title: "Options",
     type: "options",
     width: 200,
-    options: ["option1", "option2", "option3"],
+    options: [
+      { value: "option1", label: "Option 1", color: "#ef3e66" },
+      { value: "option2", label: "Option 2", color: "#f8ed14" },
+      { value: "option3", label: "Option 3", color: "#6dfa3e" },
+    ],
   },
   {
     id: "phone",
