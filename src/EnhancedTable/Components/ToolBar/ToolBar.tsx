@@ -133,6 +133,7 @@ export default function ToolBar<Row = Pojo>({
           id={"search"}
           size={"small"}
           type={"search"}
+          data-testid={"search"}
           InputProps={{
             endAdornment: <SearchIcon />,
           }}
