@@ -31,6 +31,7 @@ export default function TableHead<Row = Pojo>({
           })}
           style={getCellWidth(column as Column)}
           key={column.id as string}
+          data-testid={`table-column-${column.id as string}`}
         >
           {column.title}
           <IconButton
