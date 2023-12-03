@@ -97,6 +97,7 @@ function EditableDataCell({
     <div>
       {!isEditable && (
         <div
+          data-testid={`table-cell-${Object.values(cellId).join(".")}`}
           className={classNames(styles.DataCell, styles[column.overflow])}
           onClick={() => {
             onEdit(true);
@@ -109,6 +110,9 @@ function EditableDataCell({
         <div className={styles.EditableCell}>
           <div className={styles.EditableCellInput}>
             <TextField
+              data-testid={`table-cell-edit-input-${Object.values(cellId).join(
+                ".",
+              )}`}
               sx={{
                 width: "100%",
                 "& .MuiOutlinedInput-notchedOutline": {},
@@ -131,6 +135,9 @@ function EditableDataCell({
             />
           </div>
           <IconButton
+            data-testid={`table-cell-edit-approve-${Object.values(cellId).join(
+              ".",
+            )}`}
             size={"small"}
             araia-label="save"
             onClick={() => {
