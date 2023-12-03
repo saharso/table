@@ -42,7 +42,7 @@ function ColumnFilterDropDown<Row = Pojo>({
 
   return (
     <div>
-      <Button onClick={handleClick()}>
+      <Button onClick={handleClick()} data-testid={"filter-columns"}>
         <FilterAltIcon />
         Filter Columns
       </Button>
@@ -74,6 +74,7 @@ function ColumnFilterDropDown<Row = Pojo>({
                           onClick={(value) => {
                             onFilterColumnChange(column.id as string);
                           }}
+                          data-testid={`filter-column-${column.id as string}`}
                           dense
                         >
                           <Checkbox
