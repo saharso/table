@@ -15,7 +15,7 @@ export default function useDisplayColumns<Row = Pojo>({
     () =>
       columns
         .sort((a, b) => {
-          return a.ordinalNo - b.ordinalNo;
+          return (a.ordinalNo || 0) - (b.ordinalNo || 0);
         })
         .reduce((result, column) => {
           if (column.id === groupBy) {
